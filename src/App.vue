@@ -6,7 +6,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import NavigationBar from './components/NavigationBar.vue'
 import EventView from './components/EventView.vue'
 export default {

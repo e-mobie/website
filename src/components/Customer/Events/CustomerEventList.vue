@@ -1,130 +1,118 @@
 <template>
-<span>
-  <div class="container">
-    <div class="row" v-if="eventCounter < 1">
-      <div class="col-lg-12">
-        <div class="jumbotron">
-          <h1 class="display-4">Having somthing big? :)</h1>
-          <p class="lead">
-            Create an event and share it with the world, or keep it close to home and invite, <u>only</u>, your bestest buds!
-            <button class="btn btn-success btn-lg" data-toggle="modal" data-target="#createEventForm">Create an Event</button>
-          </p>
-        </div>
-      </div>
-    </div>
-    <div class="row" v-else>
-      <div class="col-lg-12">
-        Your Events: {{eventCounter}}
-        <span class="float-right">
-          <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#createEventForm">
-            <icon name="plus" style="vertical-align:middle;"></icon>
-            Create a new Event
-          </button>
-        </span>
-<hr />
-<div class="list-group">
-  <CustomerEventListItem v-for="item in userEvents" :key="item._id" :customer-event="item" :user="user"></CustomerEventListItem>
-</div>
-</div>
-</div>
-</div>
-<div class="modal" tabindex="-1" role="dialog" id="createEventForm">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Before we get started...</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-      </div>
-      <div class="modal-body">
-        <p class="lead">
-          We just need some general information about your event before its creation. After that we can add the specifics. And finaly when everything is perfect you can publish it.
-        </p>
-        <form v-on:submit.prevent="seedEvent">
+<b-container>
+  <b-row v-if="eventCounter < 1">
+    <b-col>
+      <b-jumbotron header="Having Something Big? :)" lead="Create an event and share it with the world, or keep it close to home and only invite your bestest buds!">
+        <hr />
+        <b-button size="lg" variant="success" v-b-modal.createEventForm>
+          Create an Event
+        </b-button>
+      </b-jumbotron>
+    </b-col>
+  </b-row>
+  <b-row v-else>
+    <b-col>
+      Your Events: {{eventCounter}}
+      <span class="float-right">
+        <b-button variant="primary" size="sm" v-b-modal.createEventForm>
+          <font-awesome-icon :icon="PlusIcon"></font-awesome-icon>
+          Create a new Event
+        </b-button>
+      </span>
+      <hr />
+      <b-list-group>
+        <CustomerEventListItem v-for="item in userEvents" :key="item._id" :customer-event="item" :user="user"></CustomerEventListItem>
+      </b-list-group>
+    </b-col>
+  </b-row>
 
-          <div class="form-group">
-            <label for="eventPurpose">What is the purpose of your event</label>
-            <select class="custom-select" name="eventPurpose" id="eventPurpose" v-model="eventPurpose" required>
-                <option value="entertainment">
-                  Entertainment
-                </option>
-                <option value="professional-networking">
-                  Professional Networking
-                </option>
-                <option value="spiritual">
-                  Spirituality
-                </option>
-                <option value="exercise-fitness">
-                  Exercise & fitness
-                </option>
-                <option value="fundraiser">
-                  Fundraiser
-                </option>
-                <option value="social">
-                  Casual Social / Mixer
-                </option>
-              </select>
-          </div>
-
-          <div class="form-check form-check-inline">
-            <p>
-              Is this a public (the world can see it) or private (just invited friends) event
-            </p>
-            <div class="custom-control custom-radio custom-control-inline">
-              <input type="radio" id="customRadioInline1" name="customRadioInline1" value="public" v-model="eventType" class="custom-control-input" selected>
-              <label class="custom-control-label" for="customRadioInline1">Public</label>
-            </div>
-            <div class="custom-control custom-radio custom-control-inline">
-              <input type="radio" id="customRadioInline2" name="customRadioInline1" value="private" v-model="eventType" class="custom-control-input">
-              <label class="custom-control-label" for="customRadioInline2">Private</label>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="eventName">Give it a name...</label>
-            <input type="text" class="form-control" name="eventName" id="eventName" v-model="eventName" required/>
-          </div>
-
-          <button class="btn btn-success" type="submit" :disabled="loading">Awesome-sauce, let's get started :)
-              <loader class="button-loader" :loading="loading" :color="loaderColor" :size="loaderSize"></loader>
-            </button>
-        </form>
+  <b-modal ref="createEventForm" id="createEventForm" hide-footer title="Before we get started...">
+    <p class="lead">
+      We just need some general information about your event
+    </p>
+    <form @submit.prevent="seedEvent">
+      <b-form-group label="Is this a Public or Private event?">
+        <b-form-radio-group v-model="eventType" :options="eventStatus"></b-form-radio-group>
+      </b-form-group>
+      <b-form-group label="What is the purpose of your event?">
+        <b-form-select v-model="eventPurpose" :options="categories"></b-form-select>
+      </b-form-group>
+      <b-form-group label="Now... Let's give it a name :)">
+        <b-form-input type="text" v-model="eventName" placeholder="Just another Awesome event :D"></b-form-input>
+      </b-form-group>
+      <div class="ml-auto">
+        <b-button-group>
+          <b-button variant="secondary">Not ready yet..</b-button>
+          <b-button type="submit" variant="success">Awesome-sauce, let's get started :)</b-button>
+        </b-button-group>
       </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" data-dismiss="modal">Not ready yet..</button>
-      </div>
-    </div>
-  </div>
-</div>
-</span>
+    </form>
+  </b-modal>
+</b-container>
 </template>
 
-<style>
-.button-loader {
-  display: inline;
-}
-</style>
-
 <script>
+import {
+  FontAwesomeIcon
+} from '@fortawesome/vue-fontawesome'
+import {
+  faPlus
+} from '@fortawesome/free-solid-svg-icons'
 import Loader from 'vue-spinner/src/PulseLoader.vue'
 import CustomerEventListItem from './CustomerEventListItem.vue'
 import swal from 'sweetalert2'
-import $ from 'jquery'
 export default {
   components: {
     CustomerEventListItem,
-    Loader
+    Loader,
+    FontAwesomeIcon
   },
   data() {
     return {
+      PlusIcon: faPlus,
       loading: false,
       loaderColor: '#fff',
       loaderSize: '6px',
       user: this.$store.state.user.user,
-      eventPurpose: null,
+      eventPurpose: 'Entertainment',
       eventName: null,
-      eventType: "public",
-      errors: []
+      eventType: "Public",
+      errors: [],
+      eventStatus: [{
+          value: 'Public',
+          text: 'Public'
+        },
+        {
+          value: 'Private',
+          text: 'Private (Coming Soon)',
+          disabled: true
+        }
+      ],
+      categories: [{
+          value: 'Entertainment',
+          text: 'Entertainment'
+        },
+        {
+          value: 'Social',
+          text: 'Social Gathering'
+        },
+        {
+          value: 'Networking',
+          text: 'Networking'
+        },
+        {
+          value: 'Fundraiser',
+          text: 'Fundraiser'
+        },
+        {
+          value: 'Education',
+          text: 'Education & Awareness'
+        },
+        {
+          value: 'Religious',
+          text: 'Spiritual & Religious'
+        }
+      ]
     };
   },
   mounted: function() {
@@ -153,10 +141,11 @@ export default {
       this.$store.dispatch('events/Create', data).then(
         response => {
           this.loading = false
+          // this.$refs.createEventForm.hide()
           /* eslint-disable no-console */
           if (response.data.success) {
             this.$store.dispatch('user/UpdateEvents', response.data.response)
-            $('#createEventForm').modal('hide')
+            this.$refs.createEventForm.hide()
             swal({
               title: 'Event Created',
               text: 'Ok now it\'s time for more details, add more info under the edit screen',
@@ -170,6 +159,20 @@ export default {
                   this.$data.eventPurpose = null
               }
             })
+          } else {
+            if (response.data.status == 401) {
+              swal({
+                title: response.message,
+                text: 'Please login',
+                type: 'warning'
+              }).then((result) => {
+                if (result) {
+                  this.$router.push({
+                    name: 'CustomerLogin'
+                  })
+                }
+              })
+            }
           }
           /* eslint-enable no-console */
         }

@@ -1,17 +1,16 @@
 <template>
-<span>
-    <GmapAutocomplete class="form-control" @place_changed="updateLocation" :required="!hasMarker" v-if="showAutoComplete"></GmapAutocomplete>
-    <GmapMap
-      :center="center"
-      :zoom="zoom"
-      map-type-id="roadmap"
-      :style="mapStyle"
-      :class="mapClass"
-    >
+<b-card title="Location">
+  <GmapMap :center="center" :zoom="zoom" map-type-id="roadmap" :style="mapStyle" :class="mapClass">
     <GmapMarker :position="MapGeoMarker.geometry.location" v-if="hasMarker">
     </GmapMarker>
   </GmapMap>
+  <span v-if="canEdit">
+    <hr />
+    <b-button variant="info" size="sm" v-if="!editing" class="float-right" @click="isEditing">Change Location</b-button>
+    <GmapAutocomplete class="form-control" @place_changed="updateLocation" :required="!hasMarker" v-if="editing"></GmapAutocomplete>
+    <b-button variant="outline-warning" @click="notEditing" v-if="editing" size="sm" class="float-right">Cancel</b-button>
   </span>
+</b-card>
 </template>
 
 <style>
@@ -39,10 +38,14 @@ export default {
     return {
       currentLocation: {},
       userlocation: {},
-      raw_location_data: {}
+      raw_location_data: {},
+      editing: false
     }
   },
   props: {
+    canEdit: {
+      type: Boolean
+    },
     MapMarker: {
       type: Object,
     },
@@ -60,9 +63,6 @@ export default {
           'img-responsive': true
         }
       }
-    },
-    showAutoComplete: {
-      default: true
     },
     zoom: {
       type: Number,
@@ -106,6 +106,13 @@ export default {
     updateLocation: function(data) {
       this.$emit('location_Changed', data)
       this.userlocation = data
+    },
+
+    isEditing: function() {
+      this.editing = true
+    },
+    notEditing: function() {
+      this.editing = false
     }
   }
 }

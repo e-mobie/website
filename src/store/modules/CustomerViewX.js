@@ -11,7 +11,9 @@ export default {
       state.user = userData
     },
     logOut (state, userData) {
-      state.user = null
+      state.user = null,
+      state.Events = [],
+      state.Invoices = []
     },
     updateUser (state, user) {
       state.user = user
@@ -250,6 +252,11 @@ export default {
           reject(e)
         })
       });
+    },
+
+    LogOut (context) {
+
+      context.commit('logOut', null)
     }
   }
 }

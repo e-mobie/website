@@ -67,7 +67,6 @@
 
 <script>
 import $ from 'jquery'
-import axios from 'axios'
 import swal from 'sweetalert2'
 export default {
   data: function() {

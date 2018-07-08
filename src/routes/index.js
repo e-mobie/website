@@ -38,7 +38,6 @@ let routes = [
   },
   {
     path: '/customer/:email',
-    name: 'Customer',
     component: Customer,
     meta: { requiresAuth: true },
     children: [
@@ -83,8 +82,9 @@ let routes = [
         ]
       },
       {
-        path: 'purchases',
-        component: CustomerTickets,
+        path: '',
+        name: 'Customer',
+        component: PurchasedTickets,
         meta: { requiresAuth: true },
         children: [
           {

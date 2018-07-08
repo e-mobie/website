@@ -1,53 +1,53 @@
 <template>
-<span class="list-group-item list-group-item-action flex-column align-items-start">
-  <div class="pull-right">
-    <router-link class="btn btn-secondary btn-sm" :to="{ name: 'EditEvent', params: {email: user.email, eventkey: customerEvent._id} }">
-      <icon name="edit"></icon>
-      Edit
-    </router-link>
-    <!-- <button v-if="!published" class="btn btn-primary btn-sm" v-on:click="PublishEvent">
-      <icon name="bullhorn"></icon>
-      Publish
-    </button> -->
-    <!-- <button v-else class="btn btn-danger btn-sm" v-on:click="CancelEvent">
-      <icon name="ban"></icon>
-      Cancel
-    </button> -->
-    <!-- <button class="btn btn-primary btn-sm" v-on:click="ManageTickets">
-        <icon name="ticket"></icon>
-        Manage Tickets
-    </button> -->
+<b-list-group>
+  <b-list-group-item>
+    <b-button-group>
+      <b-button variant="outline-info" size="sm" :to="{ name: 'EditEvent', params: {email: user.email, eventkey: customerEvent._id }}">
+        <font-awesome-icon :icon="editIcon">
+        </font-awesome-icon> Edit </b-button>
 
-    <router-link class="btn btn-success btn-sm" :to="{ name: 'QrReader', params: {eventId: customerEvent._id} }">
-      <icon name="qrcode" style="vertical-align:middle;"></icon>
-    Redeem Ticket/Voucher</router-link>
+      <b-button variant="outline-info" size="sm" :to="{ name: 'QrReader', params: {eventId: customerEvent._id} }">
+        <font-awesome-icon :icon="qrIcon">
+        </font-awesome-icon>
+        Ticket Scanner
+      </b-button>
+    </b-button-group>
 
-    <!-- <button class="btn btn-danger btn-sm" @click="DeleteEvent">
-      Delete
-    </button> -->
-  </div>
-  <div class="d-flex w-100 justify-content-between">
-    <h5 class="mb-1">{{customerEvent.title}}</h5>
-    <small class="text-muted">{{customerEvent.status}}</small>
-  </div>
-  <small class="text-muted">{{customerEvent.category}}</small>
-  <p class="mb-1" v-if="customerEvent.description">
-    {{ customerEvent.description }}
-  </p>
-  <p class="mb-1" v-else>Umm... you have yet to say what this awesome event is all about...soo N/A</p>
-  </span>
+    <div class="d-flex w-100 justify-content-between">
+      <h5 class="mb-1">{{customerEvent.title}}</h5>
+      <small class="text-muted">{{customerEvent.status}}</small>
+    </div>
+    <small class="text-muted">{{customerEvent.category}}</small>
+    <p class="mb-1" v-if="customerEvent.description">
+      {{ customerEvent.description }}
+    </p>
+    <p class="mb-1" v-else>Umm... you have yet to say what this awesome event is all about...</p>
+  </b-list-group-item>
+</b-list-group>
 </template>
 
-<style>
-
-</style>
-
 <script>
+import {
+  FontAwesomeIcon
+} from '@fortawesome/vue-fontawesome'
+import {
+  faEdit,
+  faQrcode
+} from '@fortawesome/free-solid-svg-icons'
 import swal from 'sweetalert2'
 export default {
+  components: {
+    FontAwesomeIcon
+  },
   props: [
     'customerEvent', 'user'
   ],
+  data: function() {
+    return {
+      editIcon: faEdit,
+      qrIcon: faQrcode
+    }
+  },
   computed: {
     published() {
       if (this.customerEvent != null) {
@@ -71,7 +71,6 @@ export default {
         }
       })
     },
-    /* eslint-disable no-console */
     PublishEvent() {
       this.$store.dispatch('publishEvent', this.customerEvent._id).then((response) => {
         if (!response.data.success) {
@@ -91,10 +90,8 @@ export default {
             })
           }
         }
-
       })
     },
-
     CancelEvent() {
       this.$store.dispatch('cancelEvent', this.customerEvent._id).then((response) => {
         if (!response.data.success) {
@@ -115,8 +112,7 @@ export default {
           }
         }
       })
-    },
-    /* eslint-enable no-console */
+    }
   }
 }
 </script>

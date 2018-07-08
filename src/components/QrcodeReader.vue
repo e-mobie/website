@@ -36,8 +36,6 @@ Found E-code!
 import {
   QrcodeReader
 } from 'vue-qrcode-reader'
-import swal from 'sweetalert2'
-import axios from 'axios'
 import spinner from 'vue-spinner/src/ClipLoader.vue'
 export default {
   components: {

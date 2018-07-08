@@ -161,7 +161,7 @@ export default new Vuex.Store({
   //getters
   getters: {
     userLoggedIn: state => {
-      if (Object.keys(state.user.user).length > 0) {
+      if (state.user.email != null) {
         return true;
       } else {
         return false;

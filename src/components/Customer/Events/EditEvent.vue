@@ -1,253 +1,124 @@
 <template>
-<div class="container">
-  <div class="row">
-    <div class="col-lg-12 m-2">
-      <div class="card">
-        <h3 class="card-header">
-          {{ eventObj.title }}
-        </h3>
-        <div class="card-body">
-          <button v-if="!published" class="btn btn-primary btn-sm" v-on:click="PublishEvent">
-            <icon name="bullhorn"></icon>
+<b-container>
+  <b-row>
+    <b-col>
+      <b-card :title="eventObj.title">
+        <b-button-group>
+          <b-button v-if="!published" variant="primary" size="sm" @click="PublishEvent">
             Publish
-          </button>
-          <button v-else class="btn btn-danger btn-sm" v-on:click="CancelEvent">
-            <icon name="ban"></icon>
+          </b-button>
+          <b-button v-else variant="danger" @click="CancelEvent" size="sm">
             Cancel
-          </button>
-          <router-link class="btn btn-primary btn-sm" :to="{ name: 'ManageTickets', params: {eventId: this.eventObj._id} }">
-            <icon name="ticket"></icon>
+          </b-button>
+          <b-button variant="primary" :to="{name: 'ManageTickets', params: {eventId: this.eventObj._id}}">
             Manage Tickets
-          </router-link>
-          <button type="button" class="btn btn-danger btn-sm" @click="DeleteEvent">
+          </b-button>
+          <b-button variant="danger" @click="DeleteEvent">
             Delete
-          </button>
-          <router-link :to="{ name: 'CustomerEventList', params: {} }" class="btn btn-default">Back to Event Menu</router-link>
+          </b-button>
+          <b-button variant="outline-secondary" :to="{ name: 'CustomerEventList'}"> Back to Event Menu</b-button>
+        </b-button-group>
+        <hr />
+        <b-form enctype="multipart/form-data" @submit.prevent="submitChanges">
+          <b-form-group label="Title">
+            <b-form-input type="text" v-model="eventObj.title"></b-form-input>
+          </b-form-group>
+
+          <b-form-group label="Event Purpose">
+            <b-form-select v-model="eventObj.category" :options="categories"></b-form-select>
+          </b-form-group>
+
+          <b-form-group label="Description">
+            <b-form-textarea placeholder="Enter a description" v-model="eventObj.description"></b-form-textarea>
+          </b-form-group>
+
+          <b-form-group label="Upload a Flyer" v-if="!existingFlyer.exists">
+            <b-form-file accept="image/jpeg, image/png" ref="flyerInput" v-model="imageFile"></b-form-file>
+          </b-form-group>
           <hr />
-          <form enctype="multipart/form-data" v-on:submit.prevent="submitChanges">
-            <div class="form-group">
-              <label for="eventName">Title</label>
-              <input type="text" name="eventName" id="eventName" class="form-control" v-model="eventObj.title" />
-            </div>
+          <b-form-group label="Start Date & Time" label-size="lg" horizontal>
+            <b-form-group label="Month" label-class="text-sm-right" horizontal>
+              <b-form-select v-model="startTime.month" :options="Months.options"></b-form-select>
+            </b-form-group>
 
-            <div class="form-group">
-              <label for="eventPurpose">Event Purpose</label>
-              <select class="form-control" name="eventPurpose" id="eventPurpose" v-model="eventObj.category">
-                <option value="casual_social">
-                  Casual Social
+            <b-form-group label="Date" label-class="text-sm-right" horizontal>
+              <b-form-select v-model="startTime.date" :options="StartDays.options"></b-form-select>
+            </b-form-group>
+
+            <b-form-group label="Year" label-class="text-sm-right" horizontal>
+              <b-form-select v-model="startTime.year" :options="Years.options"></b-form-select>
+            </b-form-group>
+
+            <b-form-group label="Hour" label-class="text-sm-right" horizontal>
+              <b-form-select v-model="startTime.hour" :options="Hours"></b-form-select>
+            </b-form-group>
+
+            <b-form-group label="Minute" label-class="text-sm-right" horizontal>
+              <b-form-select v-model="startTime.min" :options="Minutes"></b-form-select>
+            </b-form-group>
+
+            <b-form-group label="AM/PM" label-class="text-sm-right" horizontal>
+              <b-form-select v-model="startTime.amPm">
+                <option value="AM">
+                  AM
                 </option>
-                <option value="networking">
-                  Networking
+                <option value="PM">
+                  PM
                 </option>
-                <option value="spiritual">
-                  Spiritual
+              </b-form-select>
+            </b-form-group>
+          </b-form-group>
+          <hr />
+          <b-form-group label="Finish Date & Time" label-size="lg" horizontal>
+            <b-form-group label="Month" label-class="text-sm-right" horizontal>
+              <b-form-select v-model="finishTime.month" :options="Months.options"></b-form-select>
+            </b-form-group>
+
+            <b-form-group label="Date" label-class="text-sm-right" horizontal>
+              <b-form-select v-model="finishTime.date" :options="StartDays.options"></b-form-select>
+            </b-form-group>
+
+            <b-form-group label="Year" label-class="text-sm-right" horizontal>
+              <b-form-select v-model="finishTime.year" :options="Years.options"></b-form-select>
+            </b-form-group>
+
+            <b-form-group label="Hour" label-class="text-sm-right" horizontal>
+              <b-form-select v-model="finishTime.hour" :options="Hours"></b-form-select>
+            </b-form-group>
+
+            <b-form-group label="Minute" label-class="text-sm-right" horizontal>
+              <b-form-select v-model="finishTime.min" :options="Minutes"></b-form-select>
+            </b-form-group>
+
+            <b-form-group label="AM/PM" label-class="text-sm-right" horizontal>
+              <b-form-select v-model="finishTime.amPm">
+                <option value="AM">
+                  AM
                 </option>
-                <option value="party">
-                  Party
+                <option value="PM">
+                  PM
                 </option>
-                <option value="education">
-                  Education
-                </option>
-                <option value="fitness">
-                  Fitness
-                </option>
-              </select>
-            </div>
-            <!-- Start Time Card -->
-            <div class="card">
-              <div class="card-header">
-                Start
-              </div>
-              <div class="card-body">
-                <div class="form-row well">
-                  <div class="form-group">
-                    <label for="startMonth">Month</label>
-                    <select name="startMonth" id="startMonth" class="form-control" v-model="startTime.month">
-                      <option v-for="option in Months.options" v-bind:value="option.value" v-bind:key="option.value">
-                        {{ option.name }}
-                      </option>
-                    </select>
-                  </div>
+              </b-form-select>
+            </b-form-group>
+          </b-form-group>
+          <hr />
 
-                  <div class="form-group">
-                    <label for="startDate">Date</label>
-                    <select name="startDate" id="startDate" class="form-control" v-model="startTime.date">
-                      <option v-for="option in StartDays.options" v-bind:key="option.value" v-bind:value="option.value">
-                        {{ option.name }}
-                      </option>
-                    </select>
-                  </div>
+          <b-card header-tag="header" v-if="existingFlyer.exists" :img-src="existingFlyer.src" title="Current Flyer" img-bottom>
+            <b-button variant="outline-info" size="sm" class="float-right">Change Flyer</b-button>
+          </b-card>
 
-                  <div class="form-group">
-                    <label for="startYear">Year</label>
-                    <select name="startYear" id="startYear" class="form-control" v-model="startTime.year">
-                      <option v-for="option in Years.options" v-bind:key="option.value" v-bind:value="option.value">
-                        {{ option.name }}
-                      </option>
-                    </select>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="startHour">Hour</label>
-                    <select name="startHour" id="startHour" class="form-control" v-model="startTime.hour">
-                      <option v-for="option in Hours" :key="option.value" :value="option.value">
-                        {{option.name}}
-                      </option>
-                    </select>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="startMinutes">Minute</label>
-                    <select name="startMinutes" id="startMinutes" class="form-control" v-model="startTime.min">
-                      <option v-for="option in Minutes" :key="option.value" :value="option.value">
-                        {{ option.name }}
-                      </option>
-                    </select>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="startTimeAMPM">AM/PM</label>
-                    <select name="startTimeAMPM" id="startTimeAMPM" class="form-control" v-model="startTime.amPm">
-                      <option value="AM">
-                        AM
-                      </option>
-                      <option value="PM">
-                        PM
-                      </option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- /Start Time Card -->
-
-            <!-- Finish Time Card -->
-            <div class="card">
-              <div class="card-header">
-                Finish
-              </div>
-              <div class="card-body">
-
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="finishMonth">Month</label>
-                    <select name="finishMonth" id="finishMonth" class="form-control" v-model="finishTime.month">
-          <option v-for="option in Months.options" v-bind:value="option.value" v-bind:key="option.value">
-            {{ option.name }}
-          </option>
-        </select>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="finishDate">Date</label>
-                    <select name="finishDate" id="finishDate" class="form-control" v-model="finishTime.date">
-          <option v-for="option in FinishDays.options" v-bind:key="option.value" v-bind:value="option.value">
-            {{ option.name }}
-          </option>
-        </select>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="finishYear">Year</label>
-                    <select name="finishYear" id="finishYear" class="form-control" v-model="finishTime.year">
-          <option v-for="option in Years.options" v-bind:key="option.value" v-bind:value="option.value">
-            {{ option.name }}
-          </option>
-        </select>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="finishHour">Hour</label>
-                    <select name="finishHour" id="finishHour" class="form-control" v-model="finishTime.hour">
-          <option v-for="option in Hours" :key="option.value" :value="option.value">
-            {{option.name}}
-          </option>
-        </select>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="finishMinutes">Minute</label>
-                    <select name="finishMinutes" id="finishMinutes" class="form-control" v-model="finishTime.min">
-          <option v-for="option in Minutes" :key="option.value" :value="option.value">
-            {{ option.name }}
-          </option>
-        </select>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="finishTimeAMPM">AM/PM</label>
-                    <select name="finishTimeAMPM" id="finishTimeAMPM" class="form-control" v-model="finishTime.amPm">
-          <option value="AM">
-            AM
-          </option>
-          <option value="PM">
-            PM
-          </option>
-        </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- /Finish Time Card -->
-
-            <!-- Flyer Input -->
-            <div class="card">
-              <div class="card-header">
-                Flyer
-              </div>
-              <div class="card-body">
-                <div class="form-group" v-if="existingFlyer.exists">
-                  <label for="currentflyer" v-if="existingFlyer.exists">Current Flyer</label>
-                  <img class="img-thumbnail" v-if="existingFlyer.exists" v-bind:src="existingFlyer.src" name="currentflyer" id="currentflyer" />
-                </div>
-
-                <div class="form-group">
-                  <label for="flyer" v-if="existingFlyer.exists">Change Flyer</label>
-                  <label for="flyer" v-else>The Flyer</label>
-                  <input type="file" name="flyer" id="flyer" class="form-control" v-on:change="fileSelected" accept="image/*" />
-                </div>
-              </div>
-            </div>
-
-            <!-- /Flyer input -->
-
-            <!-- Location -->
-            <div class="card">
-              <div class="card-header">
-                Location
-              </div>
-              <div class="card-body">
-                <div class="form-group">
-                  <!-- :showAutoComplete="!has_location" -->
-                  <googleMap @location_Changed="updateLocationData" :MapMarker="currentLocation">
-
-                  </googleMap>
-                </div>
-              </div>
-            </div>
-            <!-- /Location  -->
-
-            <!-- Description -->
-            <div class="card">
-              <div class="card-header">
-                Description
-              </div>
-              <div class="card-body">
-                <textarea name="eventDescription" id="eventDescription" class="form-control" v-model="eventObj.description"></textarea>
-              </div>
-            </div>
-
-            <!-- /Description -->
-
-            <button type="submit" class="btn btn-primary">Save Changes</button>
-            <router-link :to="{ name: 'CustomerEventList', params: {} }" class="btn btn-default">Back to Event Menu</router-link>
-
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+          <b-form-group label="Location">
+            <googleMap @location_Changed="updateLocationData" :canEdit="true" :MapMarker="currentLocation"></googleMap>
+          </b-form-group>
+          <hr />
+          <div class="float-right">
+            <b-button type="submit" variant="primary">Update Event</b-button>
+          </div>
+        </b-form>
+      </b-card>
+    </b-col>
+  </b-row>
+</b-container>
 </template>
 
 <script>
@@ -263,7 +134,7 @@ export default {
     return {
       errors: [],
       user: this.$store.state.user.user,
-      location: {},
+      location: null,
       eventObj: {},
       imageFile: {},
       has_location: false,
@@ -282,7 +153,32 @@ export default {
         hour: 12,
         min: 0,
         amPm: 'AM'
-      }
+      },
+      categories: [{
+          value: 'Entertainment',
+          text: 'Entertainment'
+        },
+        {
+          value: 'Social',
+          text: 'Social Gathering'
+        },
+        {
+          value: 'Networking',
+          text: 'Networking'
+        },
+        {
+          value: 'Fundraiser',
+          text: 'Fundraiser'
+        },
+        {
+          value: 'Education',
+          text: 'Education & Awareness'
+        },
+        {
+          value: 'Religious',
+          text: 'Spiritual & Religious'
+        }
+      ]
     };
   },
   created: function() {
@@ -330,7 +226,7 @@ export default {
       for (var i = currentYear; i <= currentYear + 10; i++) {
         optionsArray.push({
           value: i,
-          name: i
+          text: i
         })
       }
       let obj = {
@@ -346,51 +242,51 @@ export default {
         selectedMonth: currentMonth,
         options: [{
             value: 0,
-            name: "January"
+            text: "January"
           },
           {
             value: 1,
-            name: "February"
+            text: "February"
           },
           {
             value: 2,
-            name: "March"
+            text: "March"
           },
           {
             value: 3,
-            name: "April"
+            text: "April"
           },
           {
             value: 4,
-            name: "May"
+            text: "May"
           },
           {
             value: 5,
-            name: "June"
+            text: "June"
           },
           {
             value: 6,
-            name: "July"
+            text: "July"
           },
           {
             value: 7,
-            name: "August"
+            text: "August"
           },
           {
             value: 8,
-            name: "September"
+            text: "September"
           },
           {
             value: 9,
-            name: "October"
+            text: "October"
           },
           {
             value: 10,
-            name: "November"
+            text: "November"
           },
           {
             value: 11,
-            name: "December"
+            text: "December"
           }
         ]
       }
@@ -403,7 +299,7 @@ export default {
       for (var i = 1; i <= moment(this.startTime.year + '-' + month, "YYYY-MM").daysInMonth(); i++) {
         optionsArray.push({
           value: i,
-          name: i
+          text: i
         })
       }
 
@@ -439,12 +335,12 @@ export default {
         if (i < 10) {
           optionsArray.push({
             value: i,
-            name: '0' + i
+            text: '0' + i
           })
         } else {
           optionsArray.push({
             value: i,
-            name: i
+            text: i
           })
         }
       }
@@ -455,7 +351,7 @@ export default {
       for (var i = 1; i <= 12; i++) {
         optionsArray.push({
           value: i,
-          name: i
+          text: i
         })
       }
       return optionsArray;
@@ -610,8 +506,8 @@ export default {
 
     submitChanges() {
       const formData = new FormData();
-      if (this.$data.imageFile[0] != null) {
-        formData.append('flyer', this.$data.imageFile[0], this.$data.imageFile[0].name);
+      if (this.$data.imageFile != null) {
+        formData.append('flyer', this.$data.imageFile, this.$data.imageFile.name);
       }
       let data = this.$data;
       data.startTimestamp = this.eventStartTimestamp;
@@ -644,11 +540,25 @@ export default {
             }
           })
         } else {
-          swal({
-            title: 'Something Went Wrong',
-            text: response.data.message,
-            type: 'error'
-          })
+          if (response.data.status == 401) {
+            swal({
+              title: 'Not Logged In',
+              text: response.data.message,
+              type: 'warning'
+            }).then((result) => {
+              if (result) {
+                this.$router.push({
+                  name: 'CustomerLogin'
+                })
+              }
+            })
+          } else {
+            swal({
+              title: 'Something Went Wrong',
+              text: response.data.message,
+              type: 'error'
+            })
+          }
         }
       }).catch(e => {
         console.log(e);
@@ -663,7 +573,3 @@ export default {
   }
 }
 </script>
-
-<style>
-
-</style>

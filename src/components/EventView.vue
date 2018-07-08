@@ -29,14 +29,7 @@
     </b-col>
 
     <b-col sm="4">
-      <b-card title="Location">
-        <div>
-          <googleMap v-if="locationData != null" :showAutoComplete="false" :mapStyle="mapStyle" :MapMarker="locationData" :zoom="10"></googleMap>
-          <p v-else>
-            Location not set
-          </p>
-        </div>
-      </b-card>
+      <googleMap v-if="locationData != null" :showAutoComplete="false" :mapStyle="mapStyle" :MapMarker="locationData" :zoom="10"></googleMap>
 
       <b-card title="Tickets">
         <div v-if="tickets.length == 0">

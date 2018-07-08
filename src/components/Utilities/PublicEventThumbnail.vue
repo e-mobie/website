@@ -42,7 +42,7 @@ a.card-mod:hover {
 </style>
 
 <script>
-// import moment from 'moment'
+import moment from 'moment'
 export default {
   props: [
     'flyer'
@@ -62,12 +62,12 @@ export default {
       }
     },
     StartTime() {
-      return this.flyer.startTime
-      // return moment.utc(this.flyer.startTime).local().format("dddd, MMMM Do YYYY, h:mm a")
+      // return this.flyer.startTime
+      return moment(this.flyer.startTime).local().format("dddd, MMMM Do YYYY, h:mm a")
     },
     finishTime() {
-      return "";
-      // return moment.utc(this.flyer.finishTime).local().format("dddd, MMMM Do YYYY, h:mm a")
+      // return "";
+      return moment(this.flyer.finishTime).local().format("dddd, MMMM Do YYYY, h:mm a")
     },
   },
 }

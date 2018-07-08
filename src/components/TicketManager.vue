@@ -85,8 +85,6 @@
 <script>
 import axios from 'axios'
 import CreatedTicket from './Customer/Events/CreatedTicketListItem.vue'
-import swal from 'sweetalert2'
-import $ from 'jquery'
 export default {
   components: {
     CreatedTicket
