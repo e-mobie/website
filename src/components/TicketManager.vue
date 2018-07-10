@@ -1,88 +1,64 @@
 <template>
-<span>
-    <div class="container" v-if="tickets.length == 0">
-              <div class="jumbotron">
-                <h2>Tickets for {{event.title}}</h2>
-                  <h3>There are '0' Tickets... </h3>
-                  <button class="btn btn-primary" data-toggle="modal" data-target="#createTicketForm"><icon name="plus"></icon> Create ticket</button>
-              </div>
-    </div>
-    <div class="container" v-else>
-      <div class="row">
-          <div class="col-lg-12">
-                '{{tickets.length}}' tickets for {{event.title}}
-            <span class="float-right">
-              <router-link :to="{ name: 'EditEvent', params: { email: this.$store.state.user.user.email, eventkey: event._id} }" class="btn btn-default btn-sm">Back to Event</router-link>
-              <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#createTicketForm">
-                <!-- <icon name="plus" style="vertical-align:middle;"></icon> -->
-                Create a New Ticket
-              </button>
-            </span>
-</div>
-</div>
-<hr/>
-<div class="list-group">
-  <CreatedTicket v-for="ticket in tickets" :key="ticket._id" :ticket="ticket"></CreatedTicket>
-</div>
-</div>
+<b-container>
+  <b-jumbotron v-if="tickets.length == 0">
+    <template slot="header">
+        <h2>Tickets for <br /> '{{event.title}}'</h2>
+          <h3>There are '0' Tickets... </h3>
+          <b-button variant="primary" v-b-modal.createTicketForm>Create Ticket</b-button>
+    </template>
+  </b-jumbotron>
+  <span v-else>
 
-<div class="modal" tabindex="-1" role="dialog" id="createTicketForm">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">So this ticket is....</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-      </div>
-      <div class="modal-body">
-        <p class="lead">
-          Please provide basic information about the ticket
-        </p>
-        <form enctype="multipart/form-data" v-on:submit.prevent="CreateTicket">
-          <div class="form-group">
-            <label for="title">Title</label>
-            <input type="text" class="form-control" name="title" id="title" v-model="newTicket.title" />
-          </div>
-          <div class="form-group">
-            <label for="quantity_available">Quantity</label>
-            <input type="number" step="1" min="5" name="quantity_available" id="quantity_available" class="form-control" v-model="newTicket.quantity_available" />
-          </div>
-          <div class="form-check form-check-inline">
-            <p>
-              Is this a Paid (customers have to pay for it) or Free (Free to get, required for entry) ticket
-            </p>
-            <div class="custom-control custom-radio custom-control-inline">
-              <input type="radio" id="customRadioInline1" name="paid_or_free" v-model="newTicket.paid_or_free" value="Paid" class="custom-control-input" disabled="true">
-              <label class="custom-control-label" for="customRadioInline1">Paid (Coming Soon)</label>
-            </div>
-            <div class="custom-control custom-radio custom-control-inline">
-              <input type="radio" id="customRadioInline2" name="paid_or_free" checked="true" v-model="newTicket.paid_or_free" value="Free" class="custom-control-input">
-              <label class="custom-control-label" for="customRadioInline2">Free</label>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="ticket_image">Ticket Image</label>
-            <input type="file" class="form-control" accept="image/*" name="ticket_image" id="ticket_image" v-on:change="fileSelected" />
-          </div>
-          <div class="form-group">
-            <label for="ticket_description">A short Description</label>
-            <textarea name="ticket_description" id="ticket_description" class="form-control" v-model="newTicket.description"></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary">Create Ticket</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
+  <b-row >
+    <b-col>
+      '{{tickets.length}}' tickets for {{event.title}}
+      <b-button-group class="float-right">
+        <b-button size="sm" :to="{ name: 'EditEvent', params: { email: this.$store.state.user.user.email, eventkey: event._id} }">Back to Event</b-button>
+        <b-button variant="primary" size="sm" v-b-modal.createTicketForm>
+          Create New Ticket
+        </b-button>
+      </b-button-group>
+    </b-col>
+  </b-row>
+  <hr />
+  <b-list-group>
+    <CreatedTicket v-for="ticket in tickets" :key="ticket._id" :ticket="ticket"></CreatedTicket>
+  </b-list-group>
 </span>
+  <b-modal id="createTicketForm" title="So this ticket is..." ref="CreateTicket">
+    <p class="lead">
+      Please provide basic information about the ticket
+    </p>
+    <b-form enctype="multipart/form-data" @submit.prevent="CreateTicket">
+      <b-form-group label="Title">
+        <b-form-input type="text" v-model="newTicket.title"></b-form-input>
+      </b-form-group>
+
+      <b-form-group label="Quantity Available">
+        <b-form-input v-model="newTicket.quantity_available" type="number" step="1" min="5"></b-form-input>
+      </b-form-group>
+
+      <b-form-group label="Is it Free? Or Pay to Purchase?">
+        <b-form-radio-group v-model="newTicket.paid_or_free">
+          <b-form-radio value="Paid" :disabled="true">Pay to Purchase</b-form-radio>
+          <b-form-radio value="Free">Free for all</b-form-radio>
+        </b-form-radio-group>
+      </b-form-group>
+
+      <b-form-group label="Ticket Image">
+        <b-form-file placeholder="Upload a Ticket Stub"></b-form-file>
+      </b-form-group>
+
+      <b-form-group label="A Short Description">
+        <b-form-textarea v-model="newTicket.description"></b-form-textarea>
+      </b-form-group>
+      <b-button type="submit" variant="primary">Create Ticket</b-button>
+    </b-form>
+  </b-modal>
+</b-container>
 </template>
-
-<style>
-
-</style>
-
 <script>
+import swal from 'sweetalert2'
 import axios from 'axios'
 import CreatedTicket from './Customer/Events/CreatedTicketListItem.vue'
 export default {
@@ -146,20 +122,36 @@ export default {
         }
       }).then((response) => {
         console.log(response);
-        // if (response.data.success) {
-        //   $('#createTicketForm').modal('hide')
-        //   swal({
-        //     title: 'Ticket Created',
-        //     type: 'success',
-        //   })
-        // } else {
-        //   $('#createTicketForm').modal('hide')
-        //   swal({
-        //     title: 'Something Went Wrong',
-        //     type: 'error',
-        //     text: response.data.message
-        //   })
-        // }
+        if (response.data.success) {
+          this.$refs.CreateTicket.hide()
+          this.$store.dispatch('user/UpdateEvents', response.data.data)
+          swal({
+            title: 'Ticket Created',
+            type: 'success',
+          })
+        } else {
+          this.$refs.CreateTicket.hide()
+          if (response.data.status != 401) {
+            swal({
+              title: 'Something Went Wrong',
+              type: 'error',
+              text: response.data.message
+            })
+          } else {
+            swal({
+              title: 'Please Sign In',
+              text: response.data.message,
+              type: 'warning'
+            }).then((response) => {
+              if (response) {
+                this.$router.push({
+                  name: 'CustomerLogin'
+                })
+              }
+            })
+          }
+
+        }
       })
     }
   }

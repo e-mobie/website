@@ -1,6 +1,6 @@
 <template>
-<div class="list-group-item">
-  <button class="btn btn-danger btn-sm" @click="deleteTicket">Delete</button>
+<b-list-group-item>
+  <b-button variant="danger" size="sm" @click="deleteTicket">Delete</b-button>
   <dl class="horizontal">
     <dt>Title</dt>
     <dd>{{ticket.title}}</dd>
@@ -11,12 +11,8 @@
     <dt>Description</dt>
     <dd>{{ticket.description}}</dd>
   </dl>
-</div>
+</b-list-group-item>
 </template>
-
-<style>
-
-</style>
 
 <script>
 import swal from 'sweetalert2'
@@ -26,18 +22,29 @@ export default {
   ],
   methods: {
     deleteTicket() {
-      this.$store.dispatch('DeleteEventTicket', this.ticket).then((response) => {
-        if (response.status == 200) {
-          if (response.data.success) {
-            this.$store.dispatch('DropEventTicket', this.ticket).then((response) => {
-              if (response.success) {
-                swal({
-                  title: "Ticket Deleted",
-                  type: "success"
-                })
-              }
-            })
-          }
+      this.$store.dispatch('user/DeleteEventTicket', this.ticket).then((response) => {
+        if (response.data.success) {
+          this.$store.dispatch('user/DropEventTicket', this.ticket).then((response) => {
+            if (response.success) {
+              swal({
+                title: "Ticket Deleted",
+                text: response.message,
+                type: "success"
+              })
+            } else {
+              swal({
+                title: "Ticket Not Deleted",
+                text: response.message,
+                type: "error"
+              })
+            }
+          })
+        } else {
+          swal({
+            title: "Ticket Not Deleted",
+            text: response.data.message,
+            type: "error"
+          })
         }
       })
     }

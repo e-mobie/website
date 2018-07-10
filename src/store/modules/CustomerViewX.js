@@ -255,8 +255,56 @@ export default {
     },
 
     LogOut (context) {
-
       context.commit('logOut', null)
-    }
+    },
+
+    DeleteEventTicket (context, ticket) {
+      let url = process.env.VUE_APP_API_URL+'/events/'+ticket.eventId+'/ticket/'+ticket._id+'/deleteTicket'
+      return new Promise((resolve, reject) => {
+        axios.create({
+          withCredentials: true
+        }).get(url).then(response => {
+          resolve (response)
+        }).catch(e => {
+          reject (e)
+        })
+      })
+    },
+
+    DropEventTicket (context, ticket) {
+      let subject_event_index = context.state.Events.findIndex((element) => {
+        if (element._id == ticket.eventId) {
+          return true
+        } else {
+          return false
+        }
+      })
+
+      if (subject_event_index != -1) {
+        let evt = context.state.Events[subject_event_index]
+        let current_tickets = evt.tickets
+        let current_ticket_position = current_tickets.findIndex((element) => {
+          if (element._id == ticket._id) {
+            return true
+          } else {
+            return false
+          }
+        })
+
+        if (current_ticket_position != -1) {
+          current_tickets.splice(current_ticket_position, 1)
+          context.dispatch('UpdateEvents', evt)
+          return {
+            success: true,
+            message: 'Ticket Deleted, Event Updated'
+          }
+        } else {
+          return {
+            success: false,
+            message: 'Ticket Not Found, Event Not Updated'
+          }
+        }
+      }
+    },
   }
 }

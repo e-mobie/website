@@ -93,42 +93,6 @@ export default new Vuex.Store({
           context.commit('UpdatePurchasedTickets', currentFlyers)
     },
 
-    DeleteEventTicket (context, ticket) {
-      let url = process.env.VUE_APP_API_URL+'/events/'+ticket.eventId+'/ticket/'+ticket._id+'/deleteTicket'
-      return new Promise((resolve, reject) => {
-        axios.create({
-          withCredentials: true
-        }).get(url).then(response => {
-          resolve (response)
-        }).catch(e => {
-          reject (e)
-        })
-      })
-    },
-
-    DropEventTicket (context, ticket) {
-      let current_tickets = context.state.CreatedTickets
-      let current_ticket_position = current_tickets.findIndex((element) => {
-        if (element._id == ticket._id) {
-          return true
-        } else {
-          return false
-        }
-      })
-
-      if (current_ticket_position != -1) {
-        current_tickets.splice(current_ticket_position, 1)
-        context.commit('UpdateCreatedTickets', current_tickets)
-        return {
-          success: true,
-        }
-      } else {
-        return {
-          success: false
-        }
-      }
-    },
-
     LogToSlack (context, payload) {
       let logValues = Object.values(payload.log)
       let logKeys = Object.keys(payload.log)
@@ -161,7 +125,7 @@ export default new Vuex.Store({
   //getters
   getters: {
     userLoggedIn: state => {
-      if (state.user.email != null) {
+      if (state.user.user.email != null) {
         return true;
       } else {
         return false;
