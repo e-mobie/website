@@ -146,7 +146,7 @@ export default {
           return axios.create({
             withCredentials: true
           }).post(process.env.VUE_APP_API_URL + '/purchaseOrder/' + this.$route.params.eventId + '/' +
-            this.qrCodeData.invoiceId + '/validate').then((response) => {
+            this.qrCodeData.invoiceId + '/validate', this.qrCodeData).then((response) => {
             console.log(response);
             if (response.data.success) {
               swal({
