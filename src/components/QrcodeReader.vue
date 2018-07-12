@@ -128,6 +128,8 @@ export default {
         title: 'Validating E-Code...',
         onOpen: () => {
           swal.showLoading()
+        },
+        preConfirm: () => {
           let queryString = content.slice(1).split('&')
           let queryObject = {}
           queryString.forEach(function(pair) {
@@ -145,7 +147,11 @@ export default {
           }).post(process.env.VUE_APP_API_URL + '/purchaseOrder/' + this.$route.params.eventId + '/' +
             this.qrCodeData.invoiceId + '/validate').then((response) => {
             if (response.data.success) {
-              swal.hideLoading()
+              swal({
+                title: response.data.message,
+                text: 'Please Validate Guest List',
+                type: 'success'
+              })
             }
           }).catch((error) => {
             swal.showValidationError({
@@ -155,39 +161,7 @@ export default {
             })
           })
         },
-        // preConfirm: () => {
-        //   let queryString = content.slice(1).split('&')
-        //   let queryObject = {}
-        //   queryString.forEach(function(pair) {
-        //     pair = pair.split('=');
-        //     queryObject[pair[0]] = decodeURIComponent(pair[1] || '');
-        //   })
-        //   let result = JSON.parse(JSON.stringify(queryObject))
-        //   this.$store.dispatch('LogToSlack', {
-        //     headline: 'QueryString',
-        //     log: result
-        //   })
-        //   this.qrCodeData = result
-        //   return axios.create({
-        //     withCredentials: true
-        //   }).post(process.env.VUE_APP_API_URL + '/purchaseOrder/' + this.$route.params.eventId + '/' +
-        //     this.qrCodeData.invoiceId + '/validate').then((response) => {
-        //     if (response.data.success) {
-        //       swal({
-        //         title: response.data.message,
-        //         text: 'Please Validate Guest List',
-        //         type: 'success'
-        //       })
-        //     }
-        //   }).catch((error) => {
-        //     swal.showValidationError({
-        //       title: error.status,
-        //       text: error.message,
-        //       type: "error"
-        //     })
-        //   })
-        // },
-        // allowOutsideClick: () => !swal.isLoading()
+        allowOutsideClick: () => !swal.isLoading()
       }).then((result) => {
         console.log(result);
       })
