@@ -147,6 +147,7 @@ export default {
             withCredentials: true
           }).post(process.env.VUE_APP_API_URL + '/purchaseOrder/' + this.$route.params.eventId + '/' +
             this.qrCodeData.invoiceId + '/validate').then((response) => {
+            console.log(response);
             if (response.data.success) {
               swal({
                 title: response.data.message,
