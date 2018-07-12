@@ -8,6 +8,18 @@
   <b-row>
     <b-col>
       <b-alert variant="warning">Please allow E-Mobie to Access your devices' camera</b-alert>
+      <b-alert variant="error" :show="has_error">
+        <dl class="dl-horizontal">
+          <span v-for="(value, key) in error">
+            <dt>
+              {{ key }}
+            </dt>
+            <dd>
+              {{ value }}
+            </dd>
+          </span>
+        </dl>
+      </b-alert>
     </b-col>
   </b-row>
   <b-row>
@@ -32,7 +44,8 @@ export default {
 
   data: function() {
     return {
-
+      has_error: false,
+      error: {}
     }
   },
   methods: {
@@ -70,40 +83,28 @@ export default {
       } catch (error) {
         if (error.name === 'NotAllowedError') {
           // user denied camera access permisson
-          this.$store.dispatch('LogToSlack', {
-            headline: 'NotAllowedError',
-            log: error
-          })
+          this.has_error = true
+          this.error = error
         } else if (error.name === 'NotFoundError') {
           // no suitable camera device installed
-          this.$store.dispatch('LogToSlack', {
-            headline: 'NotFoundError',
-            log: error
-          })
+          this.has_error = true
+          this.error = error
         } else if (error.name === 'NotSupportedError') {
           // page is not served over HTTPS (or localhost)
-          this.$store.dispatch('LogToSlack', {
-            headline: 'NotSupportedError',
-            log: error
-          })
+          this.has_error = true
+          this.error = error
         } else if (error.name === 'NotReadableError') {
           // maybe camera is already in use
-          this.$store.dispatch('LogToSlack', {
-            headline: 'NotReadableError',
-            log: error
-          })
+          this.has_error = true
+          this.error = error
         } else if (error.name === 'OverconstrainedError') {
-          this.$store.dispatch('LogToSlack', {
-            headline: 'OverconstrainedError',
-            log: error
-          })
+          this.has_error = true
+          this.error = error
           // passed constraints don't match any camera. Did you requested the front camera although there is none?
         } else {
           // browser is probably lacking features (WebRTC, Canvas)
-          this.$store.dispatch('LogToSlack', {
-            headline: 'From onInit() catchAll',
-            log: error
-          })
+          this.has_error = true
+          this.error = error
         }
       } finally {
         // hide loading indicator
