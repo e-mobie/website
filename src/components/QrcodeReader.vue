@@ -126,7 +126,7 @@ export default {
       swal({
         title: 'Validating E-Code...',
         onOpen: () => {
-          this.showloading()
+          swal.showLoading()
         },
         // preConfirm: () => {
         //   let queryString = content.slice(1).split('&')
