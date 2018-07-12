@@ -18,6 +18,17 @@ import App from './App.vue'
 import store from './store'
 import router from './routes'
 
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth) {
+    if (store.getters.userLoggedIn) {
+      next()
+    } else {
+      next({name: 'CustomerLogin'})
+    }
+  }
+  next()
+})
+
 Vue.config.productionTip = false
 
 new Vue({
