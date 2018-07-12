@@ -162,6 +162,8 @@ export default {
         //   })
         // },
         // allowOutsideClick: () => !swal.isLoading()
+      }).then((result) => {
+        console.log(result);
       })
       // let queryString = content.slice(1).split('&')
       // let queryObject = {}
