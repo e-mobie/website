@@ -126,7 +126,7 @@ export default {
       swal({
         type: 'info',
         title: 'Validating E-Code...',
-        showLoaderOnConfirm: true
+        showLoaderOnConfirm: true,
         onOpen: () => {
           swal.clickConfirm()
         },
