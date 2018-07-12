@@ -126,10 +126,11 @@ export default {
       swal({
         type: 'info',
         title: 'Validating E-Code...',
+        showLoaderOnConfirm: true
         onOpen: () => {
-          swal.showLoading()
+          swal.clickConfirm()
         },
-        preConfirm: () => {
+        preConfirm: (findit) => {
           let queryString = content.slice(1).split('&')
           let queryObject = {}
           queryString.forEach(function(pair) {
