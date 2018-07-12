@@ -5,13 +5,14 @@ export default {
     user: {}, //customer information
     Events: [], // customer events
     Invoices: [], // customer purchases
+    selected_invoice: {} // ivoice info customer is about to redeem
   },
   mutations: {
     login (state, userData) {
       state.user = userData
     },
-    logOut (state, userData) {
-      state.user = null,
+    logOut (state) {
+      state.user = {},
       state.Events = [],
       state.Invoices = []
     },
@@ -23,6 +24,9 @@ export default {
     },
     updateInvoices (state, invoicePayload) {
       state.Invoices = invoicePayload
+    },
+    updateSelectedInvoice (state, invoicePayload) {
+      state.selected_invoice = invoicePayload
     }
   },
   getters: {
@@ -51,7 +55,7 @@ export default {
 
     Invoices: (state) => {
       return state.Invoices
-    }
+    },
   },
   actions: {
     // create a ticket for sale and the return to the list
@@ -255,7 +259,7 @@ export default {
     },
 
     LogOut (context) {
-      context.commit('logOut', null)
+      context.commit('logOut')
     },
 
     DeleteEventTicket (context, ticket) {
@@ -306,5 +310,21 @@ export default {
         }
       }
     },
+
+    FindInvoice (context, invoiceId) {
+      return new Promise(function(resolve, reject) {
+        let url = process.env.VUE_APP_API_URL + '/invoice/' + invoiceId
+        axios.create({
+          withCredentials: true
+        }).get(url).then((response) => {
+          context.commit('updateSelectedInvoice', response.data)
+          resolve({
+            success: true,
+          })
+        }).catch((e) => {
+          reject(e)
+        })
+      });
+    }
   }
 }

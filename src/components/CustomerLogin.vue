@@ -2,7 +2,7 @@
 <b-container class="mt-5">
   <b-row align-h="center">
     <b-col sm="6" align-self="center">
-      <b-card>
+      <b-card title="Sign In">
         <b-form @submit="onSubmit">
           <b-form-group label="Email Address">
             <b-form-input type="email" v-model="user.email" required :disabled="loading">

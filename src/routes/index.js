@@ -19,6 +19,7 @@ import TicketManager from '../components/TicketManager.vue'
 import InvoiceView from '../components/Customer/Purchases/Invoice.vue' /////*****
 import PurchasedTickets from '../components/Customer/Purchases/PurchasedTickets.vue'
 import CustomerPreferences from '../components/Customer/Preferences/preferences.vue'
+import PurchasesIndex from '../components/Customer/Purchases/index.vue'
 
 let routes = [
   {
@@ -83,12 +84,11 @@ let routes = [
       },
       {
         path: '',
-        name: 'Customer',
-        component: PurchasedTickets,
+        component: PurchasesIndex,
         meta: { requiresAuth: true },
         children: [
           {
-            path: 'tickets',
+            path: '',
             name: 'CustomerTickets',
             component: PurchasedTickets,
             meta: { requiresAuth: true }

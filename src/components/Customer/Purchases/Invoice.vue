@@ -1,63 +1,44 @@
 <template>
 <b-container>
-  <b-button variant="danger" @click="confirmDelete">Delete</b-button>
-  <b-button variant="success" @click="showPurchaserCode">E-Code</b-button>
-  <h5>Event Title</h5>
-  <p>
-    From: {{ start }} <br/> To: {{ finish }} <br/> Ticket: {{ event_title }}
-  </p>
-  <b-card title="Guest List">
-    <p>
-      {{rsvp.length}} RSVP's, {{guests.length}} Guest spot(s)
-    </p>
-    <b-list-group>
-      <b-list-group-item v-if="guests.length > 0" button v-for="(guest_pass, guest_index) in guests" @click="showQr(guest_index, 'guest')">
-        Guest Pass # {{ guest_index + 1}}
-      </b-list-group-item>
-      <b-list-group-item button v-for="(spot, spot_index) in rsvp" :key="spot_index" @click="showQr(spot_index, 'rsvp')">
-        {{spot.f_name}} {{spot.l_name}}
-        <br /> {{spot.email}}
-      </b-list-group-item>
-    </b-list-group>
-  </b-card>
+  <b-button :to="{ name: 'CustomerTickets' }" variant="outline-info"> Back to Menu</b-button>
+  <hr />
+  <vue-qr :text="qrcode" :height="60" :width="60"></vue-qr>
 
-  <b-modal id="list_eCode" ref="list_eCode">
-    <vqr :text="eCode"></vqr>
-  </b-modal>
+  <h5>Ticket: {{ event_title }}</h5>
+  <p>
+    From: {{start}} <br /> To: {{ finish }}
+  </p>
+  <b-list-group>
+    <b-list-group-item v-if="guests.lenght > 0" v-for="(guest_pass, guest_index) in guests" @click="showQr(guest_index, 'guest')">
+      Guest Pass # {{ guest_index + 1}}
+    </b-list-group-item>
+    <b-list-group-item v-for="(spot, spot_index) in rsvp" :key="spot_index" @click="showQr(spot_index, 'rsvp')">
+      {{spot.f_name}} {{ spot.l_name}} <br /> {{spot.email}}
+    </b-list-group-item>
+  </b-list-group>
 </b-container>
 </template>
 
-<style>
-
-</style>
-
 <script>
+import VueQr from 'vue-qr'
 import moment from 'moment'
 import swal from 'sweetalert2'
 import axios from 'axios'
-import vqr from 'vue-qr'
 export default {
   components: {
-    vqr
+    VueQr
   },
-  data: function() {
+  data() {
     return {
-      invoice_data: {},
-      eCode: ''
+      invoice_data: this.$store.state.user.selected_invoice,
+      carrier_eCode: null
     }
   },
-  mounted: function() {
-    let url = process.env.VUE_APP_API_URL + '/invoice/' + this.$route.params.invoiceId
-    axios.create({
-      withCredentials: true
-    }).get(url).then((response) => {
-      this.invoice_data = response.data
-    })
-  },
+
   computed: {
     qrcode() {
       if (this.invoice_data != null) {
-        return "?eventId=" + this.invoice_data.eventId._id + "&invoiceId=" + this.invoice_data._id + "&isPurchaer=1"
+        return "?eventId=" + this.invoice_data.eventId._id + "&invoiceId=" + this.invoice_data._id + "&isPurchaser=true"
       }
     },
     start() {
@@ -89,6 +70,7 @@ export default {
       return " "
     }
   },
+
   methods: {
     confirmDelete() {
       swal({
@@ -117,17 +99,19 @@ export default {
         }
       })
     },
-    showPurchaserCode() {
-      this.eCode = this.qrcode
-      this.$refs.list_eCode.show()
-    },
+
     showQr(index, list) {
-      if (list = 'rsvp') {
-        this.eCode = "?eventId=" + this.invoice_data.eventId._id + "&invoiceId=" + this.invoice_data._id + "&list=rsvp" + "&index=" + index
-      } else if (list = 'guest') {
-        this.eCode = "?eventId=" + this.invoice_data.eventId._id + "&invoiceId=" + this.invoice_data._id + "&list=guest" + "&index=" + index
-      }
-      this.$refs.list_eCode.show()
+      const awesomeqr = require('../../../assets/awesome-qr/awesome-qr.js');
+      let listSpot = 'invoiceId=' + this.invoice_data._id + '&list=' + list + '&index=' + index + '&eventId=' + this.invoice_data.eventId._id
+      awesomeqr.eventUtil.create({
+        text: listSpot,
+        size: 350,
+        callback: (data) => {
+          this.carrier_eCode = data
+        }
+      });
+
+      $('#eCodeCarrier').modal('toggle')
     }
   }
 }

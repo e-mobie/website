@@ -14,7 +14,7 @@
 
     <b-navbar-nav class="ml-auto">
       <b-button-group>
-        <b-button variant="outline-info" :to="{name: 'Customer' , params: { email: customer.email }}" v-if="LoggedIn">
+        <b-button variant="outline-info" :to="{name: 'CustomerTickets' , params: { email: customer.email }}" v-if="LoggedIn">
           <font-awesome-icon :icon="homeIcon" />
         </b-button>
         <b-button variant="outline-warning" @click="CustomerLogout" v-if="LoggedIn">
