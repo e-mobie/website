@@ -24,7 +24,7 @@
   </b-row>
   <b-row>
     <b-col>
-      <qrcode-reader @init="onInit" @decode="onDecode" @locate="onLocate" :track="repaintLocation"></qrcode-reader>
+      <qrcode-reader :paused="pauseCamera" @init="onInit" @decode="onDecode" @locate="onLocate" :track="repaintLocation"></qrcode-reader>
     </b-col>
   </b-row>
 </b-container>
@@ -35,6 +35,7 @@ import {
   QrcodeReader
 } from 'vue-qrcode-reader'
 import axios from 'axios'
+import swal from 'sweetalert2'
 
 export default {
 
@@ -44,6 +45,7 @@ export default {
 
   data: function() {
     return {
+      pauseCamera: false,
       has_error: false,
       error: {}
     }
@@ -120,11 +122,8 @@ export default {
       }
     },
     onDecode: function(content) {
+      this.pauseCamera = true
       let queryString = content.slice(1).split('&')
-      this.$store.dispatch('LogToSlack', {
-        headline: 'testingStringInput',
-        log: queryString
-      })
       let queryObject = {}
       queryString.forEach(function(pair) {
         pair = pair.split('=');
@@ -140,7 +139,19 @@ export default {
         withCredentials: true
       }).post(process.env.VUE_APP_API_URL + '/purchaseOrder/' + this.$route.params.eventId + '/' +
         this.qrCodeData.invoiceId + '/validate').then((response) => {
-        console.log(response.data);
+        if (response.data.success) {
+          swal({
+            title: response.data.message,
+            text: 'Please Validate Guest List',
+            type: 'success'
+          })
+        }
+      }).catch((error) => {
+        swal({
+          title: error.status,
+          text: error.message,
+          type: "error"
+        })
       })
     }
   }
