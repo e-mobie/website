@@ -126,7 +126,6 @@ export default {
       swal({
         type: 'info',
         title: 'Validating E-Code...',
-        text: 'One Moment...',
         onOpen: () => {
           swal.showloading()
         },
