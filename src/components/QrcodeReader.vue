@@ -156,11 +156,7 @@ export default {
               })
             }
           }).catch((error) => {
-            swal.showValidationError({
-              title: error.status,
-              text: error.message,
-              type: "error"
-            })
+            swal.showValidationError(error.message)
           })
         },
         allowOutsideClick: () => !swal.isLoading()
