@@ -64,7 +64,7 @@ export default {
           this.loading = false
           if (error.status == 401) {
             swal({
-              title: e.message,
+              title: error.message,
               text: 'Something is wrong with the info',
               type: 'error'
             })
