@@ -1,20 +1,20 @@
 <template>
 <b-container>
-  <b-row>
+  <b-row class="m-3">
     <b-col>
       <b-card :title="eventObj.title">
         <b-button-group>
-          <b-button v-if="!published" variant="primary" size="sm" @click="PublishEvent">
+          <b-button v-if="!published" variant="outline-primary" size="sm" @click="PublishEvent">
             Publish
           </b-button>
-          <b-button v-else variant="danger" @click="CancelEvent" size="sm">
-            Cancel
+          <b-button v-else variant="outline-danger" @click="CancelEvent" size="sm">
+            Cancel Event
           </b-button>
-          <b-button variant="primary" :to="{name: 'ManageTickets', params: {eventId: this.eventObj._id}}">
+          <b-button variant="outline-primary" :to="{name: 'ManageTickets', params: {eventId: this.eventObj._id}}">
             Manage Tickets
           </b-button>
-          <b-button variant="danger" @click="DeleteEvent">
-            Delete
+          <b-button variant="outline-danger" @click="DeleteEvent">
+            Delete Event
           </b-button>
           <b-button variant="outline-secondary" :to="{ name: 'CustomerEventList'}"> Back to Event Menu</b-button>
         </b-button-group>
@@ -107,7 +107,7 @@
             <b-button variant="outline-info" size="sm" class="float-right">Change Flyer</b-button>
           </b-card>
 
-          <b-form-group label="Location">
+          <b-form-group>
             <googleMap @location_Changed="updateLocationData" :canEdit="true" :MapMarker="currentLocation"></googleMap>
           </b-form-group>
           <hr />

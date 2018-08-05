@@ -1,27 +1,25 @@
 <template>
-<b-navbar toggleable="md" type="dark" variant="dark">
+<b-navbar toggleable="md" type="light" variant="light" class="navbar-expand-lg">
 
   <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
-  <b-navbar-brand :to="{ name: 'HomePage'}">E-mobie</b-navbar-brand>
+  <b-navbar-brand :to="{ name: 'HomePage'}">E-MOBiE</b-navbar-brand>
 
   <b-collapse is-nav id="nav_collapse">
-    <b-navbar-nav>
+
+    <b-navbar-nav class="ml-auto">
       <b-nav-item>Entertainment</b-nav-item>
       <b-nav-item>Outdoor Adventures</b-nav-item>
       <b-nav-item>Water Sports</b-nav-item>
-      <b-nav-item>Everything else...</b-nav-item>
-    </b-navbar-nav>
-
-    <b-navbar-nav class="ml-auto">
-      <b-button-group>
-        <b-button variant="outline-info" :to="{name: 'CustomerTickets' , params: { email: customer.email }}" v-if="LoggedIn">
+      <b-button-group class="btn-container" v-if="LoggedIn">
+        <b-button variant="outline-info" :to="{name: 'CustomerTickets' , params: { email: customer.email }}">
           <font-awesome-icon :icon="homeIcon" />
         </b-button>
-        <b-button variant="outline-warning" @click="CustomerLogout" v-if="LoggedIn">
+        <b-button variant="outline-warning" @click="CustomerLogout">
           <font-awesome-icon :icon="SignOff"></font-awesome-icon>
         </b-button>
-        <b-button variant="info" :to="{ name: 'CustomerLogin' }" v-if="!LoggedIn">Sign In</b-button>
       </b-button-group>
+      <b-button variant="primary" :to="{ name: 'CustomerLogin' }" v-if="!LoggedIn" size="sm">Sign In</b-button>
+
     </b-navbar-nav>
   </b-collapse>
 

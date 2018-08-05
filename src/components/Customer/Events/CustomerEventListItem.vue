@@ -11,6 +11,12 @@
         </font-awesome-icon>
         Ticket Scanner
       </b-button>
+
+      <b-button variant="outline-info" size="sm" :to="{ name: 'EventStats', params: {eventkey: customerEvent._id, email: user.email}}">
+        <font-awesome-icon :icon="chartIcon">
+        </font-awesome-icon>
+        Stats
+      </b-button>
     </b-button-group>
 
     <div class="d-flex w-100 justify-content-between">
@@ -32,7 +38,8 @@ import {
 } from '@fortawesome/vue-fontawesome'
 import {
   faEdit,
-  faQrcode
+  faQrcode,
+  faChartBar
 } from '@fortawesome/free-solid-svg-icons'
 import swal from 'sweetalert2'
 export default {
@@ -44,6 +51,7 @@ export default {
   ],
   data: function() {
     return {
+      chartIcon: faChartBar,
       editIcon: faEdit,
       qrIcon: faQrcode
     }

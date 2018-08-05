@@ -27,6 +27,16 @@
       <qrcode-reader :paused="pauseCamera" @init="onInit" @decode="onDecode" @locate="onLocate" :track="repaintLocation"></qrcode-reader>
     </b-col>
   </b-row>
+  <b-modal id="LoadingScreen" v-model="showLoading" title="One Moment Please...">
+  </b-modal>
+
+  <b-modal id="invoiceScreen" v-model="show_invoice" title="The Guest List..">
+    <b-list-group>
+      <b-list-group-item v-for="(item, item_index) in invoice.contents" :key="item_index">
+        {{item.f_name}} {{item.l_name}} {{item.email}} {{item.gender}}
+      </b-list-group-item>
+    </b-list-group>
+  </b-modal>
 </b-container>
 </template>
 
@@ -47,7 +57,10 @@ export default {
     return {
       pauseCamera: false,
       has_error: false,
-      error: {}
+      error: {},
+      showLoading: false,
+      show_invoice: false,
+      invoice: {}
     }
   },
   methods: {
@@ -123,76 +136,42 @@ export default {
     },
     onDecode: function(content) {
       this.pauseCamera = true
-      swal({
-        type: 'info',
-        title: 'Validating E-Code...',
-        showLoaderOnConfirm: true,
-        onOpen: () => {
-          swal.clickConfirm()
-        },
-        preConfirm: (findit) => {
-          let queryString = content.slice(1).split('&')
-          let queryObject = {}
-          queryString.forEach(function(pair) {
-            pair = pair.split('=');
-            queryObject[pair[0]] = decodeURIComponent(pair[1] || '');
-          })
-          let result = JSON.parse(JSON.stringify(queryObject))
-          this.$store.dispatch('LogToSlack', {
-            headline: 'QueryString',
-            log: result
-          })
-          this.qrCodeData = result
-          return axios.create({
-            withCredentials: true
-          }).post(process.env.VUE_APP_API_URL + '/purchaseOrder/' + this.$route.params.eventId + '/' +
-            this.qrCodeData.invoiceId + '/validate', this.qrCodeData).then((response) => {
-            console.log(response);
-            if (response.data.success) {
-              swal({
-                title: response.data.message,
-                text: 'Please Validate Guest List',
-                type: 'success'
-              })
-            }
-          }).catch((error) => {
-            swal.showValidationError(error.message)
-          })
-        },
-        allowOutsideClick: () => !swal.isLoading()
-      }).then((result) => {
-        console.log(result);
+      this.showLoading = true
+      let queryString = content.slice(1).split('&')
+      let queryObject = {}
+      queryString.forEach(function(pair) {
+        pair = pair.split('=');
+        queryObject[pair[0]] = decodeURIComponent(pair[1] || '');
       })
-      // let queryString = content.slice(1).split('&')
-      // let queryObject = {}
-      // queryString.forEach(function(pair) {
-      //   pair = pair.split('=');
-      //   queryObject[pair[0]] = decodeURIComponent(pair[1] || '');
-      // })
-      // let result = JSON.parse(JSON.stringify(queryObject))
+      let result = JSON.parse(JSON.stringify(queryObject))
       // this.$store.dispatch('LogToSlack', {
       //   headline: 'QueryString',
       //   log: result
       // })
-      // this.qrCodeData = result
-      // axios.create({
-      //   withCredentials: true
-      // }).post(process.env.VUE_APP_API_URL + '/purchaseOrder/' + this.$route.params.eventId + '/' +
-      //   this.qrCodeData.invoiceId + '/validate').then((response) => {
-      //   if (response.data.success) {
-      //     swal({
-      //       title: response.data.message,
-      //       text: 'Please Validate Guest List',
-      //       type: 'success'
-      //     })
-      //   }
-      // }).catch((error) => {
-      //   swal({
-      //     title: error.status,
-      //     text: error.message,
-      //     type: "error"
-      //   })
-      // })
+      this.qrCodeData = result
+      axios.create({
+        withCredentials: true
+      }).post(process.env.VUE_APP_API_URL + '/purchaseOrder/' + this.$route.params.eventId + '/' +
+        this.qrCodeData.invoiceId + '/validate', this.qrCodeData).then((response) => {
+        if (response.data.success) {
+          this.invoice = response.data.invoice
+          this.show_invoice = true
+        } else if (response.data.success == false) {
+          this.showLoading = false
+          swal({
+            title: response.data.message,
+            text: response.data.message,
+            type: 'error'
+          }).then((result) => {
+            this.pauseCamera = false
+          })
+        }
+      }).catch((error) => {
+
+        this.showLoading = false
+        this.pauseCamera = false
+        swal.showValidationError(error.message)
+      })
     }
   }
 }

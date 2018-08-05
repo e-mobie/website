@@ -20,6 +20,7 @@ import InvoiceView from '../components/Customer/Purchases/Invoice.vue' /////****
 import PurchasedTickets from '../components/Customer/Purchases/PurchasedTickets.vue'
 import CustomerPreferences from '../components/Customer/Preferences/preferences.vue'
 import PurchasesIndex from '../components/Customer/Purchases/index.vue'
+import EventStats from '../components/Customer/Events/EventStats.vue'
 
 let routes = [
   {
@@ -109,6 +110,12 @@ let routes = [
     name: 'EditEvent',
     component: EditEvent,
     meta: { requiresAuth: true },
+  },
+  {
+    path: '/customer/:email/stats/:eventkey',
+    name: 'EventStats',
+    component: EventStats,
+    meta: { requiresAuth: true }
   },
   {
     path: '/publicEvent/:email/:eventkey',
