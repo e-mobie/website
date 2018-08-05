@@ -7,7 +7,7 @@
     <b-list-group>
       <b-list-group-item v-for="ticket in eventObj.tickets" :key="ticket._id" @click="setTicket(ticket)">
         <h5>{{ticket.title}}</h5>
-        <p>
+        <p v-if="ticket.price != null">
           Fees ${{ticket.price.toFixed(2)}}
         </p>
         <p>
@@ -17,7 +17,7 @@
     </b-list-group>
   </b-container>
   <b-container style="max-height: 600px; overflow-y: scroll;" id="ticketRell" v-if="ticketSelected">
-    <h5>
+    <h5 v-if="ticket.price != null">
       ${{ticketCart.ticket.price.toFixed(2)}} - {{ticketCart.ticket.title}}
     </h5>
     <b-form ref="ticketCartForm">
