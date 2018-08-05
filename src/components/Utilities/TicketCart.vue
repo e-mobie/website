@@ -106,18 +106,24 @@ export default {
           gender: "NS",
           guest_spot: false
         }]
-      }
+      },
     }
   },
   computed: {
-    showCart() {
-      if (this.toggle) {
-        // this.$refs.ticketCart.show()
-        return true
-      } else {
-        // this.$refs.ticketCart.hide()
-        return false
+    showCart: {
+      get: function() {
+        if (this.toggle) {
+          // this.$refs.ticketCart.show()
+          return true
+        } else {
+          // this.$refs.ticketCart.hide()
+          return false
+        }
+      },
+      set: function(newValue) {
+        return newValue
       }
+
     }
   },
   methods: {
