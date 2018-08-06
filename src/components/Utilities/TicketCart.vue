@@ -7,7 +7,7 @@
     <b-list-group>
       <b-list-group-item v-for="ticket in eventObj.tickets" :key="ticket._id" @click="setTicket(ticket)">
         <h5>{{ticket.title}}</h5>
-        <p v-if="ticket.price != null">
+        <p>
           Fees ${{ticket.price.toFixed(2)}}
         </p>
         <p>
@@ -17,7 +17,7 @@
     </b-list-group>
   </b-container>
   <b-container style="max-height: 600px; overflow-y: scroll;" id="ticketRell" v-if="ticketSelected">
-    <h5 v-if="ticket.price != null">
+    <h5>
       ${{ticketCart.ticket.price.toFixed(2)}} - {{ticketCart.ticket.title}}
     </h5>
     <b-form ref="ticketCartForm">
@@ -71,15 +71,16 @@
     </b-form>
   </b-container>
   <div slot="modal-footer" class="w-100">
-    <b-button-group class="float-left">
+    <b-button-group class="float-left" v-if="ticketSelected">
       <b-button variant="outline-info" @click="addRsvpSlot" :disabled="loading">Add RSVP Pass</b-button>
       <b-button variant="outline-info" @click="addGuestSlot" :disabled="loading">Add Guest Pass</b-button>
     </b-button-group>
 
-    <b-button-group class="float-right">
+    <b-button-group class="float-right" v-if="ticketSelected">
       <b-button variant="secondary" @click="closeTicketCart" :disabled="loading">Cancel</b-button>
       <b-button variant="success" @click="onTicketCartSubmit" :disabled="loading">Purchase</b-button>
     </b-button-group>
+    <b-button variant="secondary" @click="closeTicketCart" :disabled="loading" v-if="!ticketSelected">Cancel</b-button>
   </div>
 </b-modal>
 </template>
