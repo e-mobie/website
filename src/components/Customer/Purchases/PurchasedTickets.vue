@@ -12,10 +12,14 @@
       </p>
       <hr />
       <b-list-group>
-        <b-list-group-item v-for="purchase in Purchases" :key="purchase._id" @click="findInvoice(purchase._id)">
+        <b-list-group-item v-for="purchase in Purchases" :key="purchase._id">
+          <b-button-group class="float-right">
+            <b-button variant="info" size="sm" @click="findInvoice(purchase._id)">Open Invoice</b-button>
+            <b-button variant="danger" size="sm" @click="DeleteInvoice(purchase._id)">Delete</b-button>
+          </b-button-group>
           <h5 v-if="purchase.ticketId != null">{{purchase.ticketId.title}}</h5>
           <h5 v-else>N/A</h5>
-          <dl class="dl-horizontal">
+          <dl>
             <dt>
                 Event
               </dt>
@@ -33,10 +37,11 @@
 </b-container>
 </template>
 <script>
+import swal from 'sweetalert2'
 export default {
   data: function() {
     return {
-      Purchases: this.$store.state.user.Invoices
+      Purchases: this.$store.getters['user/Invoices']
     }
   },
   mounted: function() {
@@ -44,7 +49,7 @@ export default {
   },
   computed: {
     PurchaseCount: function() {
-      return this.Purchases.length
+      return this.$store.getters['user/Invoices'].length
     },
     PO: function() {
       if (this.openedTicket) {
@@ -71,8 +76,21 @@ export default {
           alert('addd')
         }
       })
+    },
+    DeleteInvoice(invoiceId) {
+      this.$store.dispatch('user/deleteCustomerInvoice', invoiceId).then((response) => {
+        if (response.success) {
+          this.Purchases = this.$store.getters['user/Invoices']
+          swal({
+            title: 'Invoice Deleted',
+            text: 'Your Invoice was successfully deleted',
+            type: 'success'
+          })
+        }
+      })
     }
   }
+
 
 }
 </script>

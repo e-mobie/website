@@ -83,7 +83,6 @@ export default {
           }
         })
         .catch(e => {
-          console.log(e);
           if (e.request.status == 401) {
             reject({
               success: false,
@@ -140,12 +139,13 @@ export default {
             })
 
             if (index_position != -1) {
-              context.state.Invoices.splice(index_position, 1)
+              current_invoices.splice(index_position, 1)
+              context.commit('updateInvoices', current_invoices)
+              resolve({
+                success: true,
+                message: "Invoice Deleted"
+              })
             }
-            resolve({
-              success: true,
-              message: "Invoice Deleted"
-            })
           }
         }).catch( (e) => {
           reject(e)
@@ -248,7 +248,6 @@ export default {
             'Content-Type': 'multipart/form-data'
           }
         }).then((response) => {
-          // console.log(response.data);
           context.commit('updateUser', response.data.user)
           resolve(response.data)
         }).catch((e) => {
