@@ -1,5 +1,9 @@
 <template>
 <b-container>
+  <b-alert variant="warning">Please allow E-Mobie to Access your devices' camera</b-alert>
+  <b-alert variant="danger" :show="has_error">
+    {{error.toString()}}
+  </b-alert>
   <b-row>
     <b-col>
       <b-button variant="outline-info" :to="{ name: 'CustomerEventList'}">Back to Event Menu</b-button>
@@ -7,19 +11,6 @@
   </b-row>
   <b-row>
     <b-col>
-      <b-alert variant="warning">Please allow E-Mobie to Access your devices' camera</b-alert>
-      <b-alert variant="error" :show="has_error">
-        <dl class="dl-horizontal">
-          <span v-for="(value, key) in error">
-            <dt>
-              {{ key }}
-            </dt>
-            <dd>
-              {{ value }}
-            </dd>
-          </span>
-        </dl>
-      </b-alert>
     </b-col>
   </b-row>
   <b-row>
