@@ -21,10 +21,10 @@
   <b-modal id="LoadingScreen" v-model="showLoading" title="One Moment Please...">
   </b-modal>
 
-  <b-modal id="invoiceScreen" v-model="show_invoice" title="The Guest List..">
+  <b-modal id="invoiceScreen" v-model="show_invoice" title="The Guest List.." @hidden="resumeCamera">
     <b-list-group>
       <b-list-group-item v-for="(item, item_index) in invoice.contents" :key="item_index">
-        {{item.f_name}} {{item.l_name}} {{item.email}} {{item.gender}}
+        First Name: {{item.f_name}} <br /> Last Name: {{item.l_name}} <br /> Email Address: {{item.email}} <br /> Gender: {{item.gender}}
       </b-list-group-item>
     </b-list-group>
   </b-modal>
@@ -55,6 +55,9 @@ export default {
     }
   },
   methods: {
+    resumeCamera() {
+      this.pauseCamera = false
+    },
     repaintLocation(location, ctx) {
       if (location !== null) {
         const {
