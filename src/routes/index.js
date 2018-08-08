@@ -63,6 +63,12 @@ let routes = [
         meta: { requiresAuth: true },
         children: [
           {
+            path: 'eventlist',
+            name: 'CustomerEventList',
+            component: CustomerEventList,
+            meta: { requiresAuth: true }
+          },
+          {
             path:'manageTickets/:eventId',
             name: 'ManageTickets',
             component: TicketManager,
@@ -70,14 +76,9 @@ let routes = [
             meta: { requiresAuth: true },
           },
           {
-            path: 'eventlist',
-            name: 'CustomerEventList',
-            component: CustomerEventList,
-            meta: { requiresAuth: true }
-          },
-          {
             path: 'scanTicket',
             name: 'QrReader',
+            props: true,
             component: Qrcodereader,
             meta: { requiresAuth: true },
           }

@@ -18,13 +18,16 @@
       <qrcode-reader :paused="pauseCamera" @init="onInit" @decode="onDecode" @locate="onLocate" :track="repaintLocation"></qrcode-reader>
     </b-col>
   </b-row>
-  <b-modal id="LoadingScreen" v-model="showLoading" title="One Moment Please...">
+  <b-modal id="LoadingScreen" v-model="showLoading" title="One Moment Please..." hide-footer>
   </b-modal>
 
-  <b-modal id="invoiceScreen" v-model="show_invoice" title="The Guest List.." @hidden="resumeCamera">
+  <b-modal id="invoiceScreen" v-model="show_invoice" title="The Guest List.." @hidden="resumeCamera" @ok="submitConfirmed">
+    Verify and confirm guest list
+    <hr />
     <b-list-group>
-      <b-list-group-item v-for="(item, item_index) in invoice.contents" :key="item_index">
-        First Name: {{item.f_name}} <br /> Last Name: {{item.l_name}} <br /> Email Address: {{item.email}} <br /> Gender: {{item.gender}}
+      <b-list-group-item v-for="(item, item_index) in invoice.contents" :key="item_index" href="#" @click="addToConfirmed(item, item_index)" :disabled="!item.outstanding">
+        <span v-if="item.outstanding" class="float-right">Click to Confirm</span>
+        <font-awesome-icon :icon="checkIcon" v-if="!item.outstanding" class="float-right" size="lg" /> First Name: {{item.f_name}} <br /> Last Name: {{item.l_name}} <br /> Email Address: {{item.email}} <br /> Gender: {{item.gender}}
       </b-list-group-item>
     </b-list-group>
   </b-modal>
@@ -35,26 +38,54 @@
 import {
   QrcodeReader
 } from 'vue-qrcode-reader'
+import {
+  FontAwesomeIcon
+} from '@fortawesome/vue-fontawesome';
+import {
+  faCheckCircle
+} from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios'
 import swal from 'sweetalert2'
 
 export default {
-
+  props: ['eventId'],
   components: {
-    QrcodeReader
+    QrcodeReader,
+    FontAwesomeIcon
   },
 
   data: function() {
     return {
+      checkIcon: faCheckCircle,
       pauseCamera: false,
       has_error: false,
       error: {},
       showLoading: false,
       show_invoice: false,
-      invoice: {}
+      invoice: {},
+      confirmed: []
     }
   },
   methods: {
+    submitConfirmed() {
+      let url = process.env.VUE_APP_API_URL + '/invoice/' + this.eventId + '/' + this.invoice._id + '/redeem'
+      axios.create({
+        withCredentials: true
+      }).post(url, {
+        purchaseOrderId: this.eventId,
+        GuestList: this.confirmed
+      }).then((results) => {
+        this.confirmed = []
+        console.log(results);
+      })
+    },
+    addToConfirmed(item, item_index) {
+      if (item.outstanding) {
+        let currentConfirmedGuests = this.confirmed
+        this.invoice.contents[item_index].outstanding = false
+        currentConfirmedGuests.push(this.invoice.contents[item_index])
+      }
+    },
     resumeCamera() {
       this.pauseCamera = false
     },
@@ -145,7 +176,7 @@ export default {
       this.qrCodeData = result
       axios.create({
         withCredentials: true
-      }).post(process.env.VUE_APP_API_URL + '/purchaseOrder/' + this.$route.params.eventId + '/' +
+      }).post(process.env.VUE_APP_API_URL + '/purchaseOrder/' + this.eventId + '/' +
         this.qrCodeData.invoiceId + '/validate', this.qrCodeData).then((response) => {
         if (response.data.success) {
           this.invoice = response.data.invoice
@@ -154,7 +185,7 @@ export default {
           this.showLoading = false
           swal({
             title: response.data.message,
-            text: response.data.message,
+            text: response.data.error.message,
             type: 'error'
           }).then((result) => {
             this.pauseCamera = false
