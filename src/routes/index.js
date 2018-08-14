@@ -22,6 +22,8 @@ import CustomerPreferences from '../components/Customer/Preferences/preferences.
 import PurchasesIndex from '../components/Customer/Purchases/index.vue'
 import EventStats from '../components/Customer/Events/EventStats.vue'
 
+import PasswordReset from '../components/Utilities/PasswordReset.vue'
+
 let routes = [
   {
     path: '/',
@@ -37,6 +39,11 @@ let routes = [
     path: '/Register',
     name: 'CustomerRegister',
     component: CustomerRegister
+  },
+  {
+    path: '/ResetPassword',
+    name: 'PasswordReset',
+    component: PasswordReset
   },
   {
     path: '/customer/:email',

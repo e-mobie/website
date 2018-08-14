@@ -15,6 +15,7 @@
             <b-button type="submit" variant="info" :disabled="loading">Sign In</b-button>
             <b-button variant="secondary" :disabled="loading" :to="{name: 'CustomerRegister'}">Sign Up</b-button>
           </b-button-group>
+          <router-link :to="{ name: 'PasswordReset', params: {} }">Forgot Password</router-link>
         </b-form>
       </b-card>
     </b-col>
