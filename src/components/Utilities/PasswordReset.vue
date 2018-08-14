@@ -95,6 +95,16 @@ export default {
                 })
               }
             })
+          } else {
+            swal({
+              title: response.data.message,
+              text: 'You need to request a new reset email',
+              type: 'error'
+            }).then((results) => {
+              this.$router.push({
+                name: 'PasswordReset'
+              })
+            })
           }
         })
       }
