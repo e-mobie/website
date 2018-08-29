@@ -1,5 +1,5 @@
 <template>
-<b-container>
+<span>
   <b-row v-if="eventCounter < 1">
     <b-col>
       <b-jumbotron header="Having Something Big? :)" lead="Create an event and share it with the world, or keep it close to home and only invite your bestest buds!">
@@ -12,43 +12,46 @@
   </b-row>
   <b-row v-else>
     <b-col>
-      Your Events: {{eventCounter}}
-      <span class="float-right">
-        <b-button variant="primary" size="sm" v-b-modal.createEventForm>
-          <font-awesome-icon :icon="PlusIcon"></font-awesome-icon>
-          Create a new Event
-        </b-button>
-      </span>
-      <hr />
-      <b-list-group>
-        <CustomerEventListItem v-for="item in userEvents" :key="item._id" :customer-event="item" :user="user"></CustomerEventListItem>
-      </b-list-group>
-    </b-col>
-  </b-row>
+      <b-card>
+        <b-card-body>
+          Your Events: {{eventCounter}}
+          <span class='float-right'>
+            <b-button variant="primary" size="sm" v-b-modal.createEventForm>
+              <font-awesome-icon :icon="PlusIcon"></font-awesome-icon>
+              Create a new Event
+            </b-button>
+          </span>
+</b-card-body>
+<b-list-group>
+  <CustomerEventListItem v-for="item in userEvents" :key="item._id" :customer-event="item" :user="user"></CustomerEventListItem>
+</b-list-group>
+</b-card>
+</b-col>
+</b-row>
 
-  <b-modal ref="createEventForm" id="createEventForm" hide-footer title="Before we get started...">
-    <p class="lead">
-      We just need some general information about your event
-    </p>
-    <form @submit.prevent="seedEvent">
-      <b-form-group label="Is this a Public or Private event?">
-        <b-form-radio-group v-model="eventType" :options="eventStatus"></b-form-radio-group>
-      </b-form-group>
-      <b-form-group label="What is the purpose of your event?">
-        <b-form-select v-model="eventPurpose" :options="categories"></b-form-select>
-      </b-form-group>
-      <b-form-group label="Now... Let's give it a name :)">
-        <b-form-input type="text" v-model="eventName" placeholder="Just another Awesome event :D"></b-form-input>
-      </b-form-group>
-      <div class="ml-auto">
-        <b-button-group>
-          <b-button variant="secondary">Not ready yet..</b-button>
-          <b-button type="submit" variant="success">Awesome-sauce, let's get started :)</b-button>
-        </b-button-group>
-      </div>
-    </form>
-  </b-modal>
-</b-container>
+<b-modal ref="createEventForm" id="createEventForm" hide-footer title="Before we get started...">
+  <p class="lead">
+    We just need some general information about your event
+  </p>
+  <form @submit.prevent="seedEvent">
+    <b-form-group label="Is this a Public or Private event?">
+      <b-form-radio-group v-model="eventType" :options="eventStatus"></b-form-radio-group>
+    </b-form-group>
+    <b-form-group label="What is the purpose of your event?">
+      <b-form-select v-model="eventPurpose" :options="categories"></b-form-select>
+    </b-form-group>
+    <b-form-group label="Now... Let's give it a name :)">
+      <b-form-input type="text" v-model="eventName" placeholder="Just another Awesome event :D"></b-form-input>
+    </b-form-group>
+    <div class="ml-auto">
+      <b-button-group>
+        <b-button variant="secondary">Not ready yet..</b-button>
+        <b-button type="submit" variant="success">Awesome-sauce, let's get started :)</b-button>
+      </b-button-group>
+    </div>
+  </form>
+</b-modal>
+</span>
 </template>
 
 <script>

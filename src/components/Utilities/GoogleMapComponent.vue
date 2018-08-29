@@ -1,20 +1,16 @@
 <template>
-<b-card title="Location">
-  <GmapMap :center="center" :zoom="zoom" map-type-id="roadmap" :style="mapStyle" :class="mapClass">
+<div class="embed-responsive embed-responsive-16by9">
+  <GmapMap :center="center" :zoom="zoom" map-type-id="roadmap" :style="mapStyle">
     <GmapMarker :position="MapGeoMarker.geometry.location" v-if="hasMarker">
     </GmapMarker>
   </GmapMap>
-  <span v-if="canEdit">
-    <hr />
-    <b-button variant="info" size="sm" v-if="!editing" class="float-right" @click="isEditing">Change Location</b-button>
-    <GmapAutocomplete class="form-control" @place_changed="updateLocation" :required="!hasMarker" v-if="editing"></GmapAutocomplete>
-    <b-button variant="outline-warning" @click="notEditing" v-if="editing" size="sm" class="float-right">Cancel</b-button>
-  </span>
-</b-card>
+</div>
 </template>
 
 <style>
-
+.vue-map-container {
+  position: static;
+}
 </style>
 
 <script>
@@ -52,8 +48,8 @@ export default {
     mapStyle: {
       default: function() {
         return {
-          width: '500px',
-          height: '300px'
+          height: '100%',
+          width: '100%'
         }
       }
     },
@@ -106,10 +102,6 @@ export default {
     updateLocation: function(data) {
       this.$emit('location_Changed', data)
       this.userlocation = data
-    },
-
-    isEditing: function() {
-      this.editing = true
     },
     notEditing: function() {
       this.editing = false

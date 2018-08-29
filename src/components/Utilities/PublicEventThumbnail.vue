@@ -31,7 +31,7 @@
           <p>
             <span class="label-Time">
               <font-awesome-icon :icon="clockIcon" /> TIME
-            </span> {{StartTime}} - {{FinishTime}}
+            </span> {{StartTime}}
           </p>
         </b-col>
       </b-row>

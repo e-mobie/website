@@ -31,33 +31,29 @@
             <b-button variant="danger" size="sm" @click="remove(slot_key)" :disabled="loading">Remove</b-button>
           </div>
           <span v-if="!slot.guest_spot">
-                <b-form-group label="First Name">
-                  <b-form-input type="text" required :id="slot_key + 'f_name'" v-model="slot.f_name" :disabled="loading"></b-form-input>
-                </b-form-group>
-
-                <b-form-group label="Last Name">
-                  <b-form-input type="text" required :id="slot_key + 'l_name'" v-model="slot.l_name" :disabled="loading"></b-form-input>
+                <b-form-group label="Full Name">
+                  <b-form-input type="text" required :id="slot_key + 'name'" v-model="slot.name" :disabled="loading || slot.signed_in"></b-form-input>
                 </b-form-group>
 
                 <b-form-group label="Email">
-                  <b-form-input type="email" required :id="slot_key + 'email'" v-model="slot.email" :disabled="loading"></b-form-input>
+                  <b-form-input type="email" required :id="slot_key + 'email'" v-model="slot.email" :disabled="loading || slot.signed_in"></b-form-input>
                 </b-form-group>
 
                 <b-form-group label="Birthday">
-                  <b-form-input type="date" required :id="slot_key + 'bday'" v-model="slot.dob" :disabled="loading"></b-form-input>
+                  <b-form-input type="date" required :id="slot_key + 'bday'" v-model="slot.dob" :disabled="loading || slot.signed_in"></b-form-input>
                 </b-form-group>
 
                 <b-form-group label="Phone Contact (optional)">
                   <b-form-input type="tel" :id="slot_key + 'phone'" v-model="slot.phone" :disabled="loading"></b-form-input>
                 </b-form-group>
 
-                <b-form-group label="Gender" required>
-                  <b-form-radio-group :id="slot_key + 'gender'" v-model="slot.gender" :disabled="loading">
+                <!-- <b-form-group label="Gender" required>
+                  <b-form-radio-group :id="slot_key + 'gender'" v-model="slot.gender" :disabled="loading || slot.signed_in">
                     <b-form-radio value="F">Female</b-form-radio>
                     <b-form-radio value="M">Male</b-form-radio>
                     <b-form-radio value="NS">Rather Not Say</b-form-radio>
                   </b-form-radio-group>
-                </b-form-group>
+                </b-form-group> -->
               </span>
 
           <span v-else>
@@ -90,6 +86,7 @@
 <script>
 import axios from 'axios'
 import swal from 'sweetalert2'
+import $ from 'jquery'
 export default {
   props: ['eventObj', 'toggle'],
   data: function() {
@@ -101,13 +98,13 @@ export default {
         ticket: {},
         purchaser: "",
         guestList: [{
-          f_name: "",
-          l_name: "",
-          email: "",
-          dob: "",
+          name: this.$store.state.user.user.username,
+          email: this.$store.state.user.user.email,
+          dob: this.$store.state.user.user.dob,
           phone: "",
           gender: "NS",
-          guest_spot: false
+          guest_spot: false,
+          signed_in: true
         }]
       },
     }
@@ -152,13 +149,12 @@ export default {
     },
     addRsvpSlot() {
       this.ticketCart.guestList.push({
-        f_name: "",
-        l_name: "",
-        gender: "F",
+        name: "",
         email: "",
         phone: "",
         dob: "",
-        guest_spot: false
+        guest_spot: false,
+        signed_in: false,
       })
       let height = this.$refs.ticketRell.clientHeight
       $('#ticketRell').animate({
@@ -200,13 +196,12 @@ export default {
                 ticket: {},
                 purchaser: "",
                 guestList: [{
-                  f_name: "",
-                  l_name: "",
+                  name: "",
                   email: "",
                   dob: "",
                   phone: "",
-                  gender: "NS",
-                  guest_spot: false
+                  guest_spot: false,
+                  signed_in: false
                 }]
               }
               this.ticketSelected = false

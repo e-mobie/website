@@ -2,7 +2,7 @@
 <span>
   <search-box v-on:search-request="SetSearchQuery"></search-box>
 <b-container fluid>
-  <b-card-group columns class="event-card-container">
+  <b-card-group class="event-card-container">
     <EventThumbnail v-if="!hasQueryResults" v-for="flyer in PublicFlyers" v-bind:key="flyer._id" v-bind:flyer="flyer" v-on:open-ticket-cart="SetTicketCartObject">
     </EventThumbnail>
     <EventThumbnail v-if="hasQueryResults" v-for="flyer in queryResults" v-bind:key="flyer._id" v-bind:flyer="flyer" v-on:open-ticket-cart="SetTicketCartObject">

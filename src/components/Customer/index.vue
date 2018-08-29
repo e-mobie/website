@@ -36,9 +36,7 @@
 
 
         </nav>
-        <div class="card-body">
-          <router-view></router-view>
-        </div>
+        <router-view></router-view>
       </div>
     </div>
   </div>
@@ -84,5 +82,6 @@ export default {
 <style>
 #content {
   margin-top: 50px;
+  margin-bottom: 20px;
 }
 </style>

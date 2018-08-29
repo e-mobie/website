@@ -2,118 +2,105 @@
 <b-container>
   <b-row class="m-3">
     <b-col>
+      <b-nav>
+        <b-nav-item :to="{ name: 'CustomerEventList'}">Back to Event Menu</b-nav-item>
+        <b-nav-item :to="{name: 'ManageTickets', params: {eventId: this.eventObj._id}}">ManageTickets</b-nav-item>
+      </b-nav>
       <b-card :title="eventObj.title">
-        <b-button-group>
-          <b-button v-if="!published" variant="outline-primary" size="sm" @click="PublishEvent">
-            Publish
-          </b-button>
-          <b-button v-else variant="outline-danger" @click="CancelEvent" size="sm">
-            Cancel Event
-          </b-button>
-          <b-button variant="outline-primary" :to="{name: 'ManageTickets', params: {eventId: this.eventObj._id}}">
-            Manage Tickets
-          </b-button>
-          <b-button variant="outline-danger" @click="DeleteEvent">
-            Delete Event
-          </b-button>
-          <b-button variant="outline-secondary" :to="{ name: 'CustomerEventList'}"> Back to Event Menu</b-button>
-        </b-button-group>
+
         <hr />
         <b-form enctype="multipart/form-data" @submit.prevent="submitChanges">
-          <b-form-group label="Title">
-            <b-form-input type="text" v-model="eventObj.title"></b-form-input>
-          </b-form-group>
+          <div class="form-row">
+            <b-col>
+              <b-form-group label="Title">
+                <b-form-input type="text" v-model="eventObj.title"></b-form-input>
+              </b-form-group>
+            </b-col>
 
-          <b-form-group label="Event Purpose">
-            <b-form-select v-model="eventObj.category" :options="categories"></b-form-select>
-          </b-form-group>
+            <b-col>
+              <b-form-group label="Event Purpose">
+                <b-form-select v-model="eventObj.category" :options="categories"></b-form-select>
+              </b-form-group>
+            </b-col>
+          </div>
 
           <b-form-group label="Description">
             <b-form-textarea placeholder="Enter a description" v-model="eventObj.description"></b-form-textarea>
           </b-form-group>
 
-          <b-form-group label="Upload a Flyer" v-if="!existingFlyer.exists">
-            <b-form-file accept="image/jpeg, image/png" ref="flyerInput" v-model="imageFile"></b-form-file>
-          </b-form-group>
+
           <hr />
-          <b-form-group label="Start Date & Time" label-size="lg" horizontal>
-            <b-form-group label="Month" label-class="text-sm-right" horizontal>
-              <b-form-select v-model="startTime.month" :options="Months.options"></b-form-select>
-            </b-form-group>
+          <div class="form-row">
+            <b-col>
+              <b-form-group label="Start Date & Time">
+                <b-form-group label="Date">
+                  <b-form-input type="date" v-model="startTime.date"></b-form-input>
+                </b-form-group>
+                <b-form-group label="Time">
+                  <b-form-input type="time" v-model="startTime.time"></b-form-input>
+                </b-form-group>
+              </b-form-group>
+            </b-col>
 
-            <b-form-group label="Date" label-class="text-sm-right" horizontal>
-              <b-form-select v-model="startTime.date" :options="StartDays.options"></b-form-select>
-            </b-form-group>
+            <b-col>
+              <b-form-group label="Finish Date & Time">
 
-            <b-form-group label="Year" label-class="text-sm-right" horizontal>
-              <b-form-select v-model="startTime.year" :options="Years.options"></b-form-select>
-            </b-form-group>
+                <b-form-group label="Date">
+                  <b-form-input type="date" v-model="finishTime.date"></b-form-input>
+                </b-form-group>
+                <b-form-group label="Time">
+                  <b-form-input type="time" v-model="finishTime.time"></b-form-input>
+                </b-form-group>
+              </b-form-group>
+            </b-col>
 
-            <b-form-group label="Hour" label-class="text-sm-right" horizontal>
-              <b-form-select v-model="startTime.hour" :options="Hours"></b-form-select>
-            </b-form-group>
+          </div>
 
-            <b-form-group label="Minute" label-class="text-sm-right" horizontal>
-              <b-form-select v-model="startTime.min" :options="Minutes"></b-form-select>
-            </b-form-group>
 
-            <b-form-group label="AM/PM" label-class="text-sm-right" horizontal>
-              <b-form-select v-model="startTime.amPm">
-                <option value="AM">
-                  AM
-                </option>
-                <option value="PM">
-                  PM
-                </option>
-              </b-form-select>
-            </b-form-group>
-          </b-form-group>
           <hr />
-          <b-form-group label="Finish Date & Time" label-size="lg" horizontal>
-            <b-form-group label="Month" label-class="text-sm-right" horizontal>
-              <b-form-select v-model="finishTime.month" :options="Months.options"></b-form-select>
-            </b-form-group>
+          <b-row>
 
-            <b-form-group label="Date" label-class="text-sm-right" horizontal>
-              <b-form-select v-model="finishTime.date" :options="StartDays.options"></b-form-select>
-            </b-form-group>
+            <b-col>
+              <h4>Flyer</h4>
+              <b-img :src="existingFlyer.src" fluid></b-img>
+              <hr />
+              <b-button variant="outline-info" @click="toggleFlyer">
+                <span v-if="!change_flyer">
+                  Change Flyer
+                </span>
+                <span v-else>
+                  Nevermind...
+                </span>
+              </b-button>
+              <b-form-group label="Upload a Flyer" v-if="change_flyer">
+                <b-form-file accept="image/jpeg, image/png" ref="flyerInput" v-model="imageFile"></b-form-file>
+              </b-form-group>
+            </b-col>
 
-            <b-form-group label="Year" label-class="text-sm-right" horizontal>
-              <b-form-select v-model="finishTime.year" :options="Years.options"></b-form-select>
-            </b-form-group>
+            <b-col>
+              <h4>Location</h4>
+              <googleMap :canEdit="true" :MapMarker="map_marker"></googleMap>
+              <hr />
+              <GmapAutocomplete class="form-control" @place_changed="updateLocationData" :value="currentLocation.formatted_address"></GmapAutocomplete>
+            </b-col>
+          </b-row>
 
-            <b-form-group label="Hour" label-class="text-sm-right" horizontal>
-              <b-form-select v-model="finishTime.hour" :options="Hours"></b-form-select>
-            </b-form-group>
-
-            <b-form-group label="Minute" label-class="text-sm-right" horizontal>
-              <b-form-select v-model="finishTime.min" :options="Minutes"></b-form-select>
-            </b-form-group>
-
-            <b-form-group label="AM/PM" label-class="text-sm-right" horizontal>
-              <b-form-select v-model="finishTime.amPm">
-                <option value="AM">
-                  AM
-                </option>
-                <option value="PM">
-                  PM
-                </option>
-              </b-form-select>
-            </b-form-group>
-          </b-form-group>
-          <hr />
-
-          <b-card header-tag="header" v-if="existingFlyer.exists" :img-src="existingFlyer.src" title="Current Flyer" img-bottom>
-            <b-button variant="outline-info" size="sm" class="float-right">Change Flyer</b-button>
-          </b-card>
-
-          <b-form-group>
-            <googleMap @location_Changed="updateLocationData" :canEdit="true" :MapMarker="currentLocation"></googleMap>
-          </b-form-group>
           <hr />
           <div class="float-right">
             <b-button type="submit" variant="primary">Update Event</b-button>
           </div>
+
+          <b-button-group>
+            <b-button v-if="!published" variant="outline-primary" @click="PublishEvent">
+              Publish
+            </b-button>
+            <b-button v-else variant="outline-danger" @click="CancelEvent">
+              Cancel Event
+            </b-button>
+            <b-button variant="outline-danger" @click="DeleteEvent">
+              Delete Event
+            </b-button>
+          </b-button-group>
         </b-form>
       </b-card>
     </b-col>
@@ -134,26 +121,12 @@ export default {
     return {
       errors: [],
       user: this.$store.state.user.user,
+      changing_location: false,
       location: null,
+      location_Changed: false,
       eventObj: {},
+      change_flyer: false,
       imageFile: {},
-      has_location: false,
-      startTime: {
-        year: moment().year(),
-        month: moment().month(),
-        date: moment().date(),
-        hour: 12,
-        min: 0,
-        amPm: "AM"
-      },
-      finishTime: {
-        year: moment().year(),
-        month: moment().month(),
-        date: moment().date(),
-        hour: 12,
-        min: 0,
-        amPm: 'AM'
-      },
       categories: [{
           value: 'Entertainment',
           text: 'Entertainment'
@@ -188,13 +161,61 @@ export default {
     /* eslint-enable no-console */
   },
   computed: {
+    startTime() {
+      if (this.eventObj) {
+        return {
+          date: moment(this.eventObj.startTime).format('YYYY-MM-DD'),
+          time: moment(this.eventObj.startTime).format('HH:mm')
+        }
+      } else {
+        return {
+          date: moment().format('YYYY-MM-DD'),
+          time: moment().format('HH:mm')
+        }
+      }
+    },
+    finishTime() {
+      if (this.eventObj) {
+        return {
+          until: false,
+          date: moment(this.eventObj.finishTime).format('YYYY-MM-DD'),
+          time: moment(this.eventObj.finishTime).format('HH:mm')
+        }
+      } else {
+        return {
+          until: false,
+          date: moment().format('YYYY-MM-DD'),
+          time: moment().format('HH:mm')
+        }
+      }
+    },
     currentLocation() {
       if (this.eventObj != null) {
         if (this.eventObj.location != null) {
+          this.location = this.eventObj.location
           let result = JSON.parse(this.eventObj.location)
-          this.has_location = true
           return result
         }
+      }
+    },
+
+    event_has_location() {
+      if (this.eventObj != null) {
+        if (this.eventObj.location != null) {
+          return true
+        } else {
+          return false
+        }
+      } else {
+        return false
+      }
+    },
+
+    map_marker() {
+      if (this.event_has_location && !this.location_Changed) {
+        return JSON.parse(this.eventObj.location)
+      } else {
+        return JSON.parse(this.location)
       }
     },
 
@@ -235,179 +256,19 @@ export default {
       }
       return obj;
     },
-    //Shared variable
-    Months() {
-      let currentMonth = moment().month()
-      let obj = {
-        selectedMonth: currentMonth,
-        options: [{
-            value: 0,
-            text: "January"
-          },
-          {
-            value: 1,
-            text: "February"
-          },
-          {
-            value: 2,
-            text: "March"
-          },
-          {
-            value: 3,
-            text: "April"
-          },
-          {
-            value: 4,
-            text: "May"
-          },
-          {
-            value: 5,
-            text: "June"
-          },
-          {
-            value: 6,
-            text: "July"
-          },
-          {
-            value: 7,
-            text: "August"
-          },
-          {
-            value: 8,
-            text: "September"
-          },
-          {
-            value: 9,
-            text: "October"
-          },
-          {
-            value: 10,
-            text: "November"
-          },
-          {
-            value: 11,
-            text: "December"
-          }
-        ]
-      }
-      return obj
-    },
-    /* eslint-disable no-console */
-    StartDays() {
-      let optionsArray = []
-      let month = this.startTime.month + 1
-      for (var i = 1; i <= moment(this.startTime.year + '-' + month, "YYYY-MM").daysInMonth(); i++) {
-        optionsArray.push({
-          value: i,
-          text: i
-        })
-      }
 
-      let currentDate = moment().date()
-      let obj = {
-        selectedDate: currentDate,
-        options: optionsArray
-      }
-      return obj;
-    },
-    /* eslint-disable no-console */
-    FinishDays() {
-      let optionsArray = []
-      let month = this.startTime.month + 1
-      for (var i = 1; i <= moment(this.finishTime.year + '-' + month, "YYYY-MM").daysInMonth(); i++) {
-        optionsArray.push({
-          value: i,
-          name: i
-        })
-      }
 
-      let currentDate = moment().date()
-      let obj = {
-        selectedDate: currentDate,
-        options: optionsArray
-      }
 
-      return obj;
-    },
-    Minutes() {
-      let optionsArray = []
-      for (var i = 0; i < 60; i++) {
-        if (i < 10) {
-          optionsArray.push({
-            value: i,
-            text: '0' + i
-          })
-        } else {
-          optionsArray.push({
-            value: i,
-            text: i
-          })
-        }
-      }
-      return optionsArray;
-    },
-    Hours() {
-      let optionsArray = []
-      for (var i = 1; i <= 12; i++) {
-        optionsArray.push({
-          value: i,
-          text: i
-        })
-      }
-      return optionsArray;
-    },
     eventStartTimestamp() {
-      let year = this.startTime.year;
-      let month = this.startTime.month + 1;
-      if (month <= 9) {
-        month = '0' + month
-      }
-      let day = this.startTime.date;
-      if (day <= 9) {
-        day = '0' + day
-      }
-      let dateString = year + '-' + month + '-' + day;
-      let minute = this.startTime.min;
-      let hour = this.startTime.hour;
-      if (hour <= 9) {
-        hour = '0' + hour
-      }
-      let am_pm = this.startTime.amPm;
-      if (minute <= 9) {
-        minute = '0' + minute;
-      }
-      let timeString = hour + ':' + minute + ':00' + ' ' + am_pm
-
-      let timeStampString = dateString + ' ' + timeString
+      let timeStampString = this.startTime.date + ' ' + this.startTime.time
       // return timeStampString
-      return moment(timeStampString, 'YYYY-MM-DD hh:mm:ss a', true).format()
+      return moment(timeStampString, 'YYYY-MM-DD HH:mm').format()
     },
     eventFinishTimestamp() {
-      let year = this.finishTime.year;
-      let month = this.finishTime.month + 1;
-      if (month <= 9) {
-        month = '0' + month
-      }
-      let day = this.finishTime.date;
-      if (day <= 9) {
-        day = '0' + day
-      }
-      let dateString = year + '-' + month + '-' + day;
-      // moment().utc()
-      let minute = this.finishTime.min;
-      let hour = this.finishTime.hour;
-      if (hour <= 9) {
-        hour = '0' + hour
-      }
-      let am_pm = this.finishTime.amPm;
-      if (minute <= 9) {
-        minute = '0' + minute;
-      }
-      let timeString = hour + ':' + minute + ':00 ' + am_pm
 
-      let timeStampString = dateString + ' ' + timeString
+      let timeStampString = this.finishTime.date + ' ' + this.finishTime.time
       // return timeStampString;
-      return moment(timeStampString, 'YYYY-MM-DD hh:mm:ss a', true).format()
+      return moment(timeStampString, 'YYYY-MM-DD HH:mm').format()
     }
   },
   methods: {
@@ -457,23 +318,6 @@ export default {
             }
           })
         }
-        // if (!response.data.success) {
-        //   swal({
-        //     title: 'Something went wrong!',
-        //     text: 'Please check your connection or contact System Admin',
-        //     type: 'error'
-        //   })
-        // } else {
-        //   let currentEvent = response.data.updatedEvent
-        //   if (currentEvent._id === this.customerEvent._id) {
-        //     this.customerEvent.status = 'published'
-        //     swal({
-        //       title: 'Event Published',
-        //       text: 'Ok now it\'s share-able',
-        //       type: 'success',
-        //     })
-        //   }
-        // }
 
       })
     },
@@ -501,9 +345,14 @@ export default {
     },
 
     updateLocationData: function(data) {
+      // this.location = data
+      this.location_Changed = true
       this.location = JSON.stringify(data)
     },
 
+    toggleFlyer() {
+      this.change_flyer = !this.change_flyer
+    },
     submitChanges() {
       const formData = new FormData();
       if (this.$data.imageFile != null) {
@@ -514,6 +363,7 @@ export default {
       data.finishTimestamp = this.eventFinishTimestamp;
 
       formData.append('seedData', JSON.stringify(data))
+
       let post_url = process.env.VUE_APP_API_URL + '/events/' + this.$data.eventObj._id + '/edit'
       axios({
         url: post_url,

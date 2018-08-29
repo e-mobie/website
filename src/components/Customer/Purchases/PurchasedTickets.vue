@@ -1,40 +1,38 @@
 <template>
-<b-container>
-  <b-jumbotron v-if="Purchases.length <= 0">
-    <p>
-      When you purchase a ticket or voucher it will show up here.
-    </p>
-  </b-jumbotron>
-  <b-row v-else>
-    <b-col>
+<b-container v-if="Purchases.length <= 0">
+  <div class="card-body">
+    <b-jumbotron>
       <p>
-        Purchases: {{ PurchaseCount }}
+        When you purchase a ticket or voucher it will show up here.
       </p>
-      <hr />
-      <b-list-group>
-        <b-list-group-item v-for="purchase in Purchases" :key="purchase._id">
-          <b-button-group class="float-right">
-            <b-button variant="info" size="sm" @click="findInvoice(purchase._id)">Open Invoice</b-button>
-            <b-button variant="danger" size="sm" @click="DeleteInvoice(purchase._id)">Delete</b-button>
-          </b-button-group>
-          <h5 v-if="purchase.ticketId != null">{{purchase.ticketId.title}}</h5>
-          <h5 v-else>N/A</h5>
-          <dl>
-            <dt>
-                Event
-              </dt>
-            <dd v-if="purchase.eventId != null">
-              {{purchase.eventId.title}}
-            </dd>
-            <dd v-else>
-              N/A
-            </dd>
-          </dl>
-        </b-list-group-item>
-      </b-list-group>
-    </b-col>
-  </b-row>
+    </b-jumbotron>
+  </div>
 </b-container>
+<span v-else>
+  <b-card>
+    <b-card-body>
+        Purchases: {{ PurchaseCount }}
+    </b-card-body>
+    <b-list-group style="max-height: 20rem; overflow-y: scroll;">
+      <b-list-group-item v-for="purchase in Purchases" :key="purchase._id">
+                  <b-button-group class="float-md-right">
+                    <b-button variant="info" size="sm" @click="findInvoice(purchase._id)">Open Invoice</b-button>
+                    <b-button variant="danger" size="sm" @click="DeleteInvoice(purchase._id)">Delete</b-button>
+                  </b-button-group>
+        <h5 v-if="purchase.ticketId != null">{{purchase.ticketId.title}}</h5>
+        <h5 v-else>N/A</h5>
+        <p v-if="purchase.eventId != null">
+          {{purchase.eventId.title}}<br />
+          ${{purchase.cost.toFixed(2)}} <br />
+          {{purchase.rsvp_list.length}} RSVP, {{purchase.guest_passes.length}} Guest
+        </p>
+        <p v-else>
+          N/A
+        </p>
+      </b-list-group-item>
+    </b-list-group>
+  </b-card>
+</span>
 </template>
 <script>
 import swal from 'sweetalert2'
@@ -51,14 +49,7 @@ export default {
     PurchaseCount: function() {
       return this.$store.getters['user/Invoices'].length
     },
-    PO: function() {
-      if (this.openedTicket) {
-        return this.Purchases.find((element) => {
-          if (element._id == this.openedTicket) {
-            return true
-          }
-        })
-      }
+    setFlush: function() {
       return false
     },
   },
