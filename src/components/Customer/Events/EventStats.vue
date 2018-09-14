@@ -1,6 +1,9 @@
 <template>
 <span>
     <b-container>
+      <b-nav>
+        <b-nav-item :to="{ name: 'CustomerEventList'}">Back to Event Menu</b-nav-item>
+      </b-nav>
       <b-card class="m-3" title="Statistics" :sub-title="eventObj.title">
         <p class="card-text">
           Total Value: ${{totalValue.toFixed(2)}}, Total Sales: ${{currentSalesValue.toFixed(2)}}

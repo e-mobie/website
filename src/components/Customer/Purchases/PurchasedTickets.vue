@@ -69,13 +69,25 @@ export default {
       })
     },
     DeleteInvoice(invoiceId) {
-      this.$store.dispatch('user/deleteCustomerInvoice', invoiceId).then((response) => {
-        if (response.success) {
-          this.Purchases = this.$store.getters['user/Invoices']
-          swal({
-            title: 'Invoice Deleted',
-            text: 'Your Invoice was successfully deleted',
-            type: 'success'
+      swal({
+        title: 'Are you sure?',
+        text: 'Once done, it\'s gone!',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButton: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.value) {
+          this.$store.dispatch('user/deleteCustomerInvoice', invoiceId).then((response) => {
+            if (response.success) {
+              this.Purchases = this.$store.getters['user/Invoices']
+              swal({
+                title: 'Invoice Deleted',
+                text: 'Your Invoice was successfully deleted',
+                type: 'success'
+              })
+            }
           })
         }
       })

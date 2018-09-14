@@ -2,12 +2,27 @@
 <span>
   <search-box v-on:search-request="SetSearchQuery"></search-box>
 <b-container fluid>
-  <b-card-group class="event-card-container">
-    <EventThumbnail v-if="!hasQueryResults" v-for="flyer in PublicFlyers" v-bind:key="flyer._id" v-bind:flyer="flyer" v-on:open-ticket-cart="SetTicketCartObject">
-    </EventThumbnail>
-    <EventThumbnail v-if="hasQueryResults" v-for="flyer in queryResults" v-bind:key="flyer._id" v-bind:flyer="flyer" v-on:open-ticket-cart="SetTicketCartObject">
-    </EventThumbnail>
-  </b-card-group>
+  <div class="row" v-for="flyer_group in GroupedFlyers">
+    <div class="col-md-3" v-for="flyer in flyer_group" v-bind:key="flyer._id">
+      <div class="event-card-container">
+        <EventThumbnail v-if="!hasQueryResults"  v-bind:flyer="flyer" v-on:open-ticket-cart="SetTicketCartObject">
+        </EventThumbnail>
+        <EventThumbnail v-if="hasQueryResults" v-bind:flyer="flyer" v-on:open-ticket-cart="SetTicketCartObject">
+        </EventThumbnail>
+      </div>
+    </div>
+    <!-- <div class="event-card-container">
+      <EventThumbnail v-if="!hasQueryResults" v-for="flyer in PublicFlyers" v-bind:key="flyer._id" v-bind:flyer="flyer" v-on:open-ticket-cart="SetTicketCartObject">
+      </EventThumbnail>
+      <EventThumbnail v-if="hasQueryResults" v-for="flyer in queryResults" v-bind:key="flyer._id" v-bind:flyer="flyer" v-on:open-ticket-cart="SetTicketCartObject">
+      </EventThumbnail>
+    </div> -->
+  </div>
+
+
+  <!-- <b-card-group class="event-card-container d-flex flex-sm-wrap">
+
+  </b-card-group> -->
 </b-container>
 <ticket-cart :eventObj="ticketCartEventObj" :toggle="openTicketModal" v-on:ticket-cart-closed="TicketModalClosed"></ticket-cart>
 </span>
@@ -37,6 +52,23 @@ export default {
     PublicFlyers() {
       return this.$store.state.events.publishedEvents
     },
+    GroupedFlyers() {
+      if (this.PublicFlyers != null) {
+        let collatedArray = []
+        let currentGroup = []
+        for (var i = 0; i < this.PublicFlyers.length; i++) {
+          currentGroup.push(this.PublicFlyers[i])
+          if (currentGroup.length % 4 == 0) {
+            collatedArray.push(currentGroup)
+            currentGroup = []
+          }
+        }
+        collatedArray.push(currentGroup)
+        return collatedArray
+      } else {
+        return []
+      }
+    }
   },
   methods: {
     SetSearchQuery: function(query) {

@@ -1,7 +1,8 @@
 <template>
 <div class="card event-card">
   <div class="event-card-img-container">
-    <img class="card-img-top" :src="flyerImageSrc" />
+    <b-img :src="thumbnail" v-if="has_thumbnail"></b-img>
+    <b-img v-else class="card-img-top" :src="flyerImageSrc" :class="flyer-thumbnail" />
     <b-button variant="default" size="sm">FREE</b-button>
   </div>
   <div class="card-body event-card-info-container">
@@ -42,7 +43,7 @@
 </div>
 </template>
 
-<style>
+<style type="scss">
 .card-mod {
   color: black;
   font-weight: normal;
@@ -53,6 +54,10 @@
 a.card-mod:hover {
   color: #28a745;
   border-color: #28a745;
+}
+
+.flyer-thumbnail {
+  object-fit: cover;
 }
 </style>
 
@@ -97,6 +102,26 @@ export default {
         return "http://via.placeholder.com/350x150"
       }
     },
+    has_thumbnail() {
+      if (this.flyer.flyer_thumbnail != null) {
+        if (this.flyer.flyer_thumbnail != '') {
+          return true
+        } else {
+          return false
+        }
+      } else {
+        return false
+      }
+    },
+    thumbnail() {
+      if (this.flyer.flyer_thumbnail != null) {
+        if (this.flyer.flyer_thumbnail != '') {
+          let flyerImg = JSON.parse(this.flyer.flyer)
+          let imgsrc = process.env.VUE_APP_API_URL + '/' + this.flyer.flyer_thumbnail
+          return imgsrc
+        }
+      }
+    },
     Fees() {
       if (this.flyer.tickets.length > 0) {
         let priceArray = []
@@ -121,6 +146,8 @@ export default {
         } else {
           return "$" + lowest.toFixed(2) + " - $" + highest.toFixed(2)
         }
+      } else {
+        return 'None Avaiable'
       }
     },
     StartDate() {

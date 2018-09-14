@@ -1,6 +1,9 @@
 <template>
 <b-list-group-item>
-  <b-button variant="danger" size="sm" @click="deleteTicket">Delete</b-button>
+  <b-button-group>
+    <b-button variant="danger" @click="deleteTicket" size="sm">Delete</b-button>
+    <b-button variant="warning" size="sm" @click="editMe">Edit</b-button>
+  </b-button-group>
   <dl class="horizontal">
     <dt>Title</dt>
     <dd>{{ticket.title}}</dd>
@@ -21,29 +24,44 @@ export default {
     'ticket'
   ],
   methods: {
+    editMe() {
+      this.$emit('edit_me', this.ticket._id)
+    },
     deleteTicket() {
-      this.$store.dispatch('user/DeleteEventTicket', this.ticket).then((response) => {
-        if (response.data.success) {
-          this.$store.dispatch('user/DropEventTicket', this.ticket).then((response) => {
-            if (response.success) {
-              swal({
-                title: "Ticket Deleted",
-                text: response.message,
-                type: "success"
+      swal({
+        title: 'Are you sure?',
+        text: 'Once done, it\'s gone!',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButton: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.value) {
+          this.$store.dispatch('user/DeleteEventTicket', this.ticket).then((response) => {
+            if (response.data.success) {
+              this.$store.dispatch('user/DropEventTicket', this.ticket).then((response) => {
+                if (response.success) {
+                  swal({
+                    title: "Ticket Deleted",
+                    text: response.message,
+                    type: "success"
+                  })
+                } else {
+                  swal({
+                    title: "Ticket Not Deleted",
+                    text: response.message,
+                    type: "error"
+                  })
+                }
               })
             } else {
               swal({
                 title: "Ticket Not Deleted",
-                text: response.message,
+                text: response.data.message,
                 type: "error"
               })
             }
-          })
-        } else {
-          swal({
-            title: "Ticket Not Deleted",
-            text: response.data.message,
-            type: "error"
           })
         }
       })

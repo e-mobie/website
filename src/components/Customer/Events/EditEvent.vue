@@ -31,6 +31,11 @@
 
           <hr />
           <div class="form-row">
+            <b-form-group>
+              <b-form-radio-group :options="event_frequency_options" v-model="event_frequency"></b-form-radio-group>
+            </b-form-group>
+          </div>
+          <div class="form-row">
             <b-col>
               <b-form-group label="Start Date & Time">
                 <b-form-group label="Date">
@@ -46,7 +51,7 @@
               <b-form-group label="Finish Date & Time">
 
                 <b-form-group label="Date">
-                  <b-form-input type="date" v-model="finishTime.date"></b-form-input>
+                  <b-form-input type="date" v-model="finishTime.date" :disabled="event_frequency != 'recurring'"></b-form-input>
                 </b-form-group>
                 <b-form-group label="Time">
                   <b-form-input type="time" v-model="finishTime.time"></b-form-input>
@@ -81,7 +86,8 @@
               <h4>Location</h4>
               <googleMap :canEdit="true" :MapMarker="map_marker"></googleMap>
               <hr />
-              <GmapAutocomplete class="form-control" @place_changed="updateLocationData" :value="currentLocation.formatted_address"></GmapAutocomplete>
+              <GmapAutocomplete class="form-control" @place_changed="updateLocationData" :value="currentLocation.formatted_address" v-if="currentLocation != null"></GmapAutocomplete>
+              <GmapAutocomplete class="form-control" @place_changed="updateLocationData" v-else></GmapAutocomplete>
             </b-col>
           </b-row>
 
@@ -127,6 +133,7 @@ export default {
       eventObj: {},
       change_flyer: false,
       imageFile: {},
+      // IDEA: Pull event types from the server
       categories: [{
           value: 'Entertainment',
           text: 'Entertainment'
@@ -150,6 +157,16 @@ export default {
         {
           value: 'Religious',
           text: 'Spiritual & Religious'
+        }
+      ],
+      event_frequency: 'same_day',
+      event_frequency_options: [{
+          text: 'Same Day',
+          value: 'same_day'
+        },
+        {
+          text: 'Recurring',
+          value: 'recurring'
         }
       ]
     };

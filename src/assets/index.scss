@@ -143,9 +143,11 @@
 
     .event-card-img-container img {
         width: 100%;
-        height: auto;
-        // background: linear-gradient(0deg, rgba($richblue, 0.45), rgba($richblue, 0.45)),
-        //             url('../img/background.jpg');
+        object-fit: cover;
+        // height: auto;
+        max-height: 350px;
+        // background: linear-gradient(0deg, rgba($richblue, 0.45), rgba($richblue, 0.45))
+                    // url('../img/background.jpg');
         // background-repeat: no-repeat;
         // background-size: cover;
         // background-position: center;

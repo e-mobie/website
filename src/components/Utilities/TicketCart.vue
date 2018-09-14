@@ -96,7 +96,7 @@ export default {
       ticketCart: {
         eventId: "",
         ticket: {},
-        purchaser: "",
+        purchaser: this.$store.state.user.user.email,
         guestList: [{
           name: this.$store.state.user.user.username,
           email: this.$store.state.user.user.email,

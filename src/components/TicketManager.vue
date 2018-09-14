@@ -11,6 +11,7 @@
 
   <b-row >
     <b-col>
+      <hr />
       '{{tickets.length}}' tickets for {{event.title}}
       <b-button-group class="float-right">
         <b-button size="sm" :to="{ name: 'EditEvent', params: { email: this.$store.state.user.user.email, eventkey: event._id} }">Back to Event</b-button>
@@ -18,12 +19,14 @@
           Create New Ticket
         </b-button>
       </b-button-group>
+      <hr />
+      <b-list-group>
+        <CreatedTicket v-for="ticket in tickets" :key="ticket._id" :ticket="ticket" @edit_me="editTicket"></CreatedTicket>
+      </b-list-group>
+      <hr />
     </b-col>
   </b-row>
-  <hr />
-  <b-list-group>
-    <CreatedTicket v-for="ticket in tickets" :key="ticket._id" :ticket="ticket"></CreatedTicket>
-  </b-list-group>
+
 </span>
   <b-modal id="createTicketForm" title="So this ticket is..." ref="CreateTicket">
     <p class="lead">
@@ -55,6 +58,37 @@
       <b-button type="submit" variant="primary">Create Ticket</b-button>
     </b-form>
   </b-modal>
+
+  <b-modal id="editTicketForm" title="So Change this ticket to..." ref="EditTicket">
+    <p class="lead">
+      Updating the basic information about the ticket
+    </p>
+    <b-form enctype="multipart/form-data" @submit.prevent="CreateTicket">
+      <b-form-group label="Title">
+        <b-form-input type="text" v-model="editing_Ticket.title"></b-form-input>
+      </b-form-group>
+
+      <b-form-group label="Quantity Available">
+        <b-form-input v-model="editing_Ticket.quantity_available" type="number" step="1" min="5"></b-form-input>
+      </b-form-group>
+
+      <b-form-group label="Is it Free? Or Pay to Purchase?">
+        <b-form-radio-group v-model="editing_Ticket.paid_or_free">
+          <b-form-radio value="Paid" :disabled="true">Pay to Purchase</b-form-radio>
+          <b-form-radio value="Free">Free for all</b-form-radio>
+        </b-form-radio-group>
+      </b-form-group>
+
+      <b-form-group label="Ticket Image">
+        <b-form-file accept="image/*" placeholder="Upload a Ticket Stub" v-if="editing_Ticket.ticket_image == null"></b-form-file>
+      </b-form-group>
+
+      <b-form-group label="A Short Description">
+        <b-form-textarea v-model="editing_Ticket.description"></b-form-textarea>
+      </b-form-group>
+      <b-button type="submit" variant="primary">Update Ticket</b-button>
+    </b-form>
+  </b-modal>
 </b-container>
 </template>
 <script>
@@ -70,6 +104,7 @@ export default {
   ],
   data() {
     return {
+      editing_Ticket: {},
       newTicket: {
         title: "",
         quantity_available: 5,
@@ -153,6 +188,17 @@ export default {
 
         }
       })
+    },
+    editTicket(ticketId) {
+      let currentTickets = this.tickets
+      //catch it
+      let index = currentTickets.findIndex((element) => {
+        if (element._id == ticketId) {
+          return true
+        }
+      })
+      this.editing_Ticket = currentTickets[index]
+      this.$refs.EditTicket.show()
     }
   }
 }
