@@ -1,6 +1,6 @@
 <template>
 <span>
-  <search-box v-on:search-request="SetSearchQuery"></search-box>
+  <search-box v-on:search-request="SetSearchQuery" :events="PublicFlyers" :search_summary="search_results" v-on:location-filter="UpdateLocationFilter"></search-box>
 <b-container fluid>
   <div class="row" v-for="flyer_group in GroupedFlyers">
     <div class="col-md-3" v-for="flyer in flyer_group" v-bind:key="flyer._id">
@@ -34,6 +34,7 @@
 import TicketCart from './Utilities/TicketCart.vue'
 import SearchBox from './Utilities/SearchBox.vue'
 import EventThumbnail from './Utilities/PublicEventThumbnail.vue'
+import fuse from 'fuse.js'
 export default {
   components: {
     SearchBox,
@@ -42,6 +43,10 @@ export default {
   },
   data: function() {
     return {
+      hasLocationFilter: false,
+      LocationFilter: {},
+      search_results: '',
+      emptyLocation: false,
       hasQueryResults: false,
       queryResults: [],
       ticketCartEventObj: {},
@@ -52,12 +57,48 @@ export default {
     PublicFlyers() {
       return this.$store.state.events.publishedEvents
     },
+    LocationResults() {
+      if (this.emptyLocation) {
+        return false
+      } else {
+        return true
+      }
+    },
+    FilteredResults() {
+      if (this.hasLocationFilter) {
+        let filteredList = []
+        if (this.PublicFlyers != null) {
+          this.PublicFlyers.forEach((element) => {
+            if (element.location != null) {
+              if (JSON.parse(element.location).formatted_address == this.LocationFilter.formatted_address) {
+                filteredList.push(element)
+              }
+            }
+          })
+        }
+        if (filteredList.length > 0) {
+          this.emptyLocation = false
+          this.search_results = null
+          return filteredList
+        } else {
+          this.emptyLocation = true
+          this.search_results = 'Nothing\'s happing at that Location'
+          return this.PublicFlyers
+        }
+      } else {
+        if (this.PublicFlyers != null) {
+          return this.PublicFlyers
+        } else {
+          return []
+        }
+      }
+    },
     GroupedFlyers() {
-      if (this.PublicFlyers != null) {
+      if (this.hasQueryResults) {
         let collatedArray = []
         let currentGroup = []
-        for (var i = 0; i < this.PublicFlyers.length; i++) {
-          currentGroup.push(this.PublicFlyers[i])
+        for (var i = 0; i < this.queryResults.length; i++) {
+          currentGroup.push(this.queryResults[i])
           if (currentGroup.length % 4 == 0) {
             collatedArray.push(currentGroup)
             currentGroup = []
@@ -66,17 +107,30 @@ export default {
         collatedArray.push(currentGroup)
         return collatedArray
       } else {
-        return []
+        if (this.PublicFlyers != null) {
+          let collatedArray = []
+          let currentGroup = []
+          for (var i = 0; i < this.FilteredResults.length; i++) {
+            currentGroup.push(this.FilteredResults[i])
+            if (currentGroup.length % 4 == 0) {
+              collatedArray.push(currentGroup)
+              currentGroup = []
+            }
+          }
+          collatedArray.push(currentGroup)
+          return collatedArray
+        } else {
+          return []
+        }
       }
     }
   },
   methods: {
     SetSearchQuery: function(query) {
       let grossResults = []
-      let keywords = query.keywords
-      if (keywords.length > 0) {
-        this.PublicFlyers.forEach((element) => {
-          if (element.title.toLowerCase().indexOf(keywords.toLowerCase()) != -1) {
+      if (query.length > 0) {
+        this.FilteredResults.forEach((element) => {
+          if (query.indexOf(element._id) != -1) {
             grossResults.push(element)
           }
         })
@@ -95,6 +149,10 @@ export default {
     TicketModalClosed: function(evt) {
       this.ticketCartEventObj = {},
         this.openTicketModal = false
+    },
+    UpdateLocationFilter(e) {
+      this.LocationFilter = e
+      this.hasLocationFilter = true
     }
   }
 }

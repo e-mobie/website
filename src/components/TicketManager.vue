@@ -63,7 +63,7 @@
     <p class="lead">
       Updating the basic information about the ticket
     </p>
-    <b-form enctype="multipart/form-data" @submit.prevent="CreateTicket">
+    <b-form enctype="multipart/form-data" @submit.prevent="UpdateTicket">
       <b-form-group label="Title">
         <b-form-input type="text" v-model="editing_Ticket.title"></b-form-input>
       </b-form-group>
@@ -199,6 +199,59 @@ export default {
       })
       this.editing_Ticket = currentTickets[index]
       this.$refs.EditTicket.show()
+    },
+    UpdateTicket() {
+      const formData = new FormData();
+      if (this.$data.new_ticket_image[0] != null) {
+        formData.append('ticket_image', this.$data.new_ticket_image[0], this.$data.new_ticket_image[0].name);
+      }
+      let data = this.$data.newTicket;
+
+      formData.append('seedData', JSON.stringify(data))
+
+      let post_url = process.env.VUE_APP_API_URL + '/tickets/' + this.event.publisher + '/' + this.eventId + '/create'
+      axios({
+        url: post_url,
+        method: 'POST',
+        data: formData,
+        withCredentials: true,
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'mutlipart/form-data'
+        }
+      }).then((response) => {
+        console.log(response);
+        if (response.data.success) {
+          this.$refs.CreateTicket.hide()
+          this.$store.dispatch('user/UpdateEvents', response.data.data)
+          swal({
+            title: 'Ticket Created',
+            type: 'success',
+          })
+        } else {
+          this.$refs.CreateTicket.hide()
+          if (response.data.status != 401) {
+            swal({
+              title: 'Something Went Wrong',
+              type: 'error',
+              text: response.data.message
+            })
+          } else {
+            swal({
+              title: 'Please Sign In',
+              text: response.data.message,
+              type: 'warning'
+            }).then((response) => {
+              if (response) {
+                this.$router.push({
+                  name: 'CustomerLogin'
+                })
+              }
+            })
+          }
+
+        }
+      })
     }
   }
 }
