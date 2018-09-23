@@ -45,7 +45,6 @@ export default {
     return {
       hasLocationFilter: false,
       LocationFilter: {},
-      search_results: '',
       emptyLocation: false,
       hasQueryResults: false,
       queryResults: [],
@@ -78,11 +77,9 @@ export default {
         }
         if (filteredList.length > 0) {
           this.emptyLocation = false
-          this.search_results = null
           return filteredList
         } else {
           this.emptyLocation = true
-          this.search_results = 'Nothing\'s happing at that Location'
           return this.PublicFlyers
         }
       } else {
@@ -91,6 +88,13 @@ export default {
         } else {
           return []
         }
+      }
+    },
+    search_results() {
+      if (this.emptyLocation === true) {
+        return 'There\'s Nothing happening'
+      } else {
+        return null
       }
     },
     GroupedFlyers() {

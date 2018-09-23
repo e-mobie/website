@@ -13,10 +13,11 @@
       <div class="section-wrapper">
         <div class="section location-section">
           <img src="img/location-marker.png" alt="">
-          <GmapAutocomplete class="location-input" @place_changed="setLoction"></GmapAutocomplete>
-          <button class="btn" type="button" @click="detectLocation">
+          <GmapAutocomplete class="location-input" @place_changed="setLocation" v-model="locationModel.formatted_address"></GmapAutocomplete>
+          <button class="btn" type="button" @click="detectLocation" :disabled="searching">
                       <img src="img/gps-marker.png" alt="">
-                      <span>DETECT LOCATION</span>
+                      <span v-if="!searching">DETECT LOCATION</span>
+                      <span v-else>SEARCHING...</span>
                   </button>
         </div>
         <div class="section-border"></div>
@@ -31,7 +32,7 @@
       <p class="search-summary">
         {{search_summary}}
       </p>
-      <button type="button" class="btn btn-default btn-sm">Reset Search</button>
+      <button type="button" class="btn btn-default btn-sm" @click="clearFilters">Reset Search</button>
     </div>
   </div>
 
@@ -75,7 +76,9 @@ export default {
   },
   data: function() {
     return {
+      searching: false,
       fuse: {},
+      locationModel: {},
       LocationIcon: faMapMarkerAlt,
       SearchIcon: faSearch,
       SearchDetails: {
@@ -85,10 +88,14 @@ export default {
     }
   },
   methods: {
+    clearFilters: function() {
+      this.setLocation({})
+    },
     lookFor: function(e) {
       this.$emit('search-request', this.fuse.search(e.target.value));
     },
-    setLoction: function(e) {
+    setLocation: function(e) {
+      this.locationModel = e
       this.$emit('location-filter', e)
     },
     findUserLocation(position, error) {
@@ -99,16 +106,19 @@ export default {
       let geocoder = new this.google.maps.Geocoder;
       geocoder.geocode({
         'location': latlang
-      }, function(results, status) {
+      }, (results, status) => {
         if (status === 'OK') {
           if (results[0]) {
-            console.log(results[0]);
+            this.locationModel = results[0]
+            this.setLocation(results[0])
+            this.searching = false
           }
         }
       })
     },
     detectLocation: function() {
       if (navigator.geolocation) {
+        this.searching = true
         navigator.geolocation.getCurrentPosition(this.findUserLocation)
       } else {
         swal({
