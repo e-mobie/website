@@ -13,7 +13,7 @@
       Guest Pass # {{ guest_index + 1}}
     </b-list-group-item>
     <b-list-group-item v-for="(spot, spot_index) in rsvp" :key="spot_index" @click="showQr(spot_index, 'rsvp')">
-      {{spot.f_name}} {{ spot.l_name}} <br /> {{spot.email}}
+      {{spot.name}} <br /> {{spot.email}}
     </b-list-group-item>
   </b-list-group>
 </b-container>

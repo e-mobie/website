@@ -16,6 +16,7 @@ import Qrcodereader from '../components/QrcodeReader.vue'
 
 import EventView from '../components/EventView.vue'
 import TicketManager from '../components/TicketManager.vue'
+import GuestListManager from '../components/GuestListManager.vue'
 import InvoiceView from '../components/Customer/Purchases/Invoice.vue' /////*****
 import PurchasedTickets from '../components/Customer/Purchases/PurchasedTickets.vue'
 import CustomerPreferences from '../components/Customer/Preferences/preferences.vue'
@@ -81,6 +82,15 @@ let routes = [
             component: TicketManager,
             props: true,
             meta: { requiresAuth: true },
+          },
+          {
+            path: 'ticket-guest-list/:ticketId',
+            name: 'TicketGuestList',
+            component: GuestListManager,
+            props: true,
+            meta: {
+              requiresAuth: true
+            }
           },
           {
             path: 'scanTicket',

@@ -4,7 +4,7 @@
     <b-col>
       <b-nav>
         <b-nav-item :to="{ name: 'CustomerEventList'}">Back to Event Menu</b-nav-item>
-        <b-nav-item :to="{name: 'ManageTickets', params: {eventId: this.eventObj._id}}">ManageTickets</b-nav-item>
+        <b-nav-item :to="{name: 'ManageTickets', params: {eventId: this.eventObj._id, eventObj: this.eventObj}}">ManageTickets</b-nav-item>
       </b-nav>
       <b-card :title="eventObj.title">
 

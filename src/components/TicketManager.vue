@@ -105,25 +105,29 @@ export default {
   data() {
     return {
       editing_Ticket: {},
+      secret_code: "",
       newTicket: {
         title: "",
         quantity_available: 5,
         description: '',
         paid_or_free: "Free"
       },
-      new_ticket_image: {}
+      new_ticket_image: {},
+      event: this.$store.getters['user/userEventByKey'](this.eventId)
     }
   },
 
   computed: {
-    event: function() {
-      return this.$store.state.user.Events.find(
-        (element) => {
-          if (element._id == this.eventId) {
-            return true
-          }
+    private: function() {
+      if (this.event != null) {
+        if (this.event.eventType === 'Private') {
+          return true
+        } else {
+          return false
         }
-      )
+      } else {
+        return false
+      }
     },
     tickets: function() {
       if (this.event != null) {
@@ -143,6 +147,11 @@ export default {
       }
       let data = this.$data.newTicket;
 
+      if (this.event.eventType === 'Private') {
+        data.ticket_type = 'Private'
+        data.secret_code = this.$data.secret_code
+      }
+
       formData.append('seedData', JSON.stringify(data))
 
       let post_url = process.env.VUE_APP_API_URL + '/tickets/' + this.event.publisher + '/' + this.eventId + '/create'
@@ -156,10 +165,10 @@ export default {
           'Content-Type': 'mutlipart/form-data'
         }
       }).then((response) => {
-        console.log(response);
         if (response.data.success) {
+          console.log(response);
           this.$refs.CreateTicket.hide()
-          this.$store.dispatch('user/UpdateEvents', response.data.data)
+          this.$store.dispatch('user/AddEventTicket', response.data.data)
           swal({
             title: 'Ticket Created',
             type: 'success',
@@ -206,6 +215,11 @@ export default {
         formData.append('ticket_image', this.$data.new_ticket_image[0], this.$data.new_ticket_image[0].name);
       }
       let data = this.$data.newTicket;
+
+      if (this.event.eventType === 'Private') {
+        data.ticket_type = 'Private'
+        data.secret_code = this.$data.secret_code
+      }
 
       formData.append('seedData', JSON.stringify(data))
 

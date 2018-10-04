@@ -12,6 +12,8 @@ Vue.use(VueGoogleMaps, {
     libraries: 'places'
   }
 })
+import {ClientTable, Event} from 'vue-tables-2';
+Vue.use(ClientTable);
 
 import VueChatScroll from 'vue-chat-scroll'
 Vue.use(VueChatScroll)

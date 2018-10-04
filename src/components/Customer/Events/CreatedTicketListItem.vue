@@ -3,6 +3,7 @@
   <b-button-group>
     <b-button variant="danger" @click="deleteTicket" size="sm">Delete</b-button>
     <b-button variant="warning" size="sm" @click="editMe">Edit</b-button>
+    <b-button variant="primary" size="sm" :to="{name: 'TicketGuestList', params: {ticket: ticket, ticketId: ticket._id}}">Manage Guest list</b-button>
   </b-button-group>
   <dl class="horizontal">
     <dt>Title</dt>

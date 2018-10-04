@@ -296,7 +296,7 @@ export default {
 
         if (current_ticket_position != -1) {
           current_tickets.splice(current_ticket_position, 1)
-          context.dispatch('UpdateEvents', evt)
+          context.dispatch('UpdateEvents', evt) // reset the events array
           return {
             success: true,
             message: 'Ticket Deleted, Event Updated'
@@ -305,6 +305,43 @@ export default {
           return {
             success: false,
             message: 'Ticket Not Found, Event Not Updated'
+          }
+        }
+      }
+    },
+
+    AddEventTicket (context, ticket) {
+      //Step 1) Find the event
+      let subject_event_index = context.state.Events.findIndex((element) => {
+        if (element._id == ticket.eventId) {
+          return true
+        } else {
+          return false
+        }
+      })
+
+      if (subject_event_index != -1) {
+        let evt = context.state.Events[subject_event_index] //We have found the event
+        let current_tickets = evt.tickets // Step 2 get its tickets
+        let current_ticket_position = current_tickets.findIndex((element) => {
+          if (element._id == ticket._id) {
+            return true
+          } else {
+            return false
+          }
+        })
+
+        if (current_ticket_position === -1) {
+          evt.tickets.push(ticket)
+          context.dispatch('UpdateEvents', evt)
+          return {
+            success: true,
+            message: 'Ticket Added, Event Updated'
+          }
+        } else {
+          return {
+            success: false,
+            message: 'Ticket Exists, Try Editing'
           }
         }
       }

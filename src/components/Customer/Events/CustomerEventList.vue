@@ -87,8 +87,7 @@ export default {
         },
         {
           value: 'Private',
-          text: 'Private (Coming Soon)',
-          disabled: true
+          text: 'Private'
         }
       ],
       categories: [{
