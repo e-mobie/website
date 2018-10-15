@@ -102,7 +102,6 @@ export default {
           email: this.$store.state.user.user.email,
           dob: this.$store.state.user.user.dob,
           phone: "",
-          gender: "NS",
           guest_spot: false,
           signed_in: true
         }]

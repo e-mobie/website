@@ -22,6 +22,7 @@ import PurchasedTickets from '../components/Customer/Purchases/PurchasedTickets.
 import CustomerPreferences from '../components/Customer/Preferences/preferences.vue'
 import PurchasesIndex from '../components/Customer/Purchases/index.vue'
 import EventStats from '../components/Customer/Events/EventStats.vue'
+import ConfirmRsvp from '../components/Customer/Invites/ConfirmRsvp.vue'
 
 import PasswordReset from '../components/Utilities/PasswordReset.vue'
 
@@ -45,6 +46,11 @@ let routes = [
     path: '/ResetPassword',
     name: 'PasswordReset',
     component: PasswordReset
+  },
+  {
+    path: '/invite/:invite_id/rsvp_confirm',
+    name: 'ConfirmRsvp',
+    component: ConfirmRsvp
   },
   {
     path: '/customer/:email',

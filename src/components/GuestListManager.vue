@@ -37,18 +37,30 @@
 </template>
 
 <script>
+import swal from 'sweetalert2'
 import axios from 'axios'
 import DataTables from './Utilities/DataTables.vue'
 export default {
   components: {
     DataTables
   },
+  mounted() {
+    // load created guests
+    let url = process.env.VUE_APP_API_URL + '/invites/all/' + this.ticketId
+    axios.create({
+      withCredentials: true
+    }).get(url).then((response) => {
+      console.log(response.data);
+      this.ticket = response.data.ticket
+      this.ticket_box = response.data.invites
+    })
+  },
   props: [
     'ticketId',
-    'ticket'
   ],
   data() {
     return {
+      ticket: {},
       new_entry: {
         name: "",
         email: "",
@@ -100,13 +112,19 @@ export default {
         withCredentials: true
       }).post(url, payload).then((response) => {
         let invites = response.data
-        for (var i = 0; i < invites.length; i++) {
-          axios.create({
-            withCredentials: true
-          }).get(process.env.VUE_APP_API_URL + '/invite/' + invites[i]._id + '/send').then((response) => {
-            console.log(response);
-          })
-        }
+        // console.log(invites);
+        let ticket_box_temp = this.ticket_box
+        invites.forEach((el) => {
+          if (ticket_box_temp[el.index_position].status != el.status) {
+            ticket_box_temp[el.index_position].status = el.status
+          }
+          this.ticket_box = ticket_box_temp
+        })
+        swal({
+          title: 'Invites Sent',
+          text: 'We sent the invites :)',
+          type: 'success'
+        })
       })
     }
   }
