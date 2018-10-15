@@ -16,7 +16,7 @@
         <div class="form-group">
           <input type="email" class="form-control" placeholder="Enter your email" v-model="confirmed_email"/>
           </div>
-          <button type="submit" class="btn btn-success">Submit Confirmation</button>
+          <button type="submit" class="btn btn-success" :disabled="loading">Submit Confirmation</button>
       </form>
     </div>
   </div>
@@ -33,11 +33,13 @@ import axios from 'axios'
 export default {
   data() {
     return {
+      loading: false,
       confirmed_email: ''
     }
   },
   methods: {
     submitRSVPconfirmation() {
+      this.loading = true
       let url = process.env.VUE_APP_API_URL + '/invite/' + this.$route.params.invite_id + '/rsvp_confirm'
       axios.create({
         withCredentials: true,
@@ -45,9 +47,16 @@ export default {
         if (response.data.body != null) {
           swal({
             title: 'See You There, :)',
-            text: 'Your E-Pass was sent to your email, don\'t forget it ;)',
+            text: 'Your E-Pass was sent to your email, don\'t forget it',
             type: 'success'
           })
+        } else {
+          swal({
+            title: 'Something is wrong',
+            text: 'Are you sure everything is correct?',
+            type: 'error'
+          })
+          this.loading = false
         }
       })
     }
