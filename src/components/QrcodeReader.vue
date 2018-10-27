@@ -181,6 +181,7 @@ export default {
         this.qrCodeData.invoiceId + '/validate', this.qrCodeData).then((response) => {
         console.log(response);
         if (response.data.success) {
+          console.log(response.data.invoice);
           this.invoice = response.data.invoice
           this.show_invoice = true
         } else if (response.data.success == false) {
