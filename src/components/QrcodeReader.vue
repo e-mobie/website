@@ -180,30 +180,37 @@ export default {
       }).post(process.env.VUE_APP_API_URL + '/purchaseOrder/' + this.eventId + '/' +
         this.qrCodeData.invoiceId + '/validate', this.qrCodeData).then((response) => {
         console.log(response);
-        if (response.data.success) {
-          console.log(response.data.invoice);
-          this.invoice = response.data.invoice
-          this.show_invoice = true
-        } else if (response.data.success == false) {
-          this.showLoading = false
-          if (response.data.error.message != null) {
-            swal({
-              title: response.data.message,
-              text: response.data.error.message,
-              type: 'error'
-            }).then((result) => {
-              this.pauseCamera = false
-            })
-          } else {
-            swal({
-              title: response.data.message,
-              text: response.data.message,
-              type: 'error'
-            }).then((result) => {
-              this.pauseCamera = false
-            })
-          }
+        if (response.data) {
+          swal({
+            title: 'They\'re on the list',
+            text: 'The invoice exists',
+            type: 'success'
+          })
         }
+        // if (response.data.success) {
+        //   console.log(response.data.invoice);
+        //   this.invoice = response.data.invoice
+        //   this.show_invoice = true
+        // } else if (response.data.success == false) {
+        //   this.showLoading = false
+        //   if (response.data.error.message != null) {
+        //     swal({
+        //       title: response.data.message,
+        //       text: response.data.error.message,
+        //       type: 'error'
+        //     }).then((result) => {
+        //       this.pauseCamera = false
+        //     })
+        //   } else {
+        //     swal({
+        //       title: response.data.message,
+        //       text: response.data.message,
+        //       type: 'error'
+        //     }).then((result) => {
+        //       this.pauseCamera = false
+        //     })
+        //   }
+        // }
       }).catch((error) => {
         console.log(error);
         this.showLoading = false
