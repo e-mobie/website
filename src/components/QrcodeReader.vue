@@ -160,6 +160,7 @@ export default {
       }
     },
     onDecode: function(content) {
+      console.log(content);
       this.pauseCamera = true
       this.showLoading = true
       let queryString = content.slice(1).split('&')
