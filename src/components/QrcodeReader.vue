@@ -179,6 +179,7 @@ export default {
         withCredentials: true
       }).post(process.env.VUE_APP_API_URL + '/purchaseOrder/' + this.eventId + '/' +
         this.qrCodeData.invoiceId + '/validate', this.qrCodeData).then((response) => {
+        console.log(response);
         if (response.data.success) {
           this.invoice = response.data.invoice
           this.show_invoice = true
@@ -193,7 +194,7 @@ export default {
           })
         }
       }).catch((error) => {
-
+        console.log(error);
         this.showLoading = false
         this.pauseCamera = false
         swal.showValidationError(error.message)
