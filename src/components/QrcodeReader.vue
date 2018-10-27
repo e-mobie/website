@@ -169,10 +169,10 @@ export default {
         queryObject[pair[0]] = decodeURIComponent(pair[1] || '');
       })
       let result = JSON.parse(JSON.stringify(queryObject))
-      // this.$store.dispatch('LogToSlack', {
-      //   headline: 'QueryString',
-      //   log: result
-      // })
+      this.$store.dispatch('LogToSlack', {
+        headline: 'QueryString',
+        log: result
+      })
       this.qrCodeData = result
       axios.create({
         withCredentials: true
