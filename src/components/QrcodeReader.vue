@@ -180,7 +180,7 @@ export default {
       }).post(process.env.VUE_APP_API_URL + '/purchaseOrder/' + this.eventId + '/' +
         this.qrCodeData.invoiceId + '/validate', this.qrCodeData).then((response) => {
         console.log(response);
-        if (response.data) {
+        if (response.data.success == false) {
           swal({
             title: 'They\'re on the list',
             text: 'The invoice exists',
