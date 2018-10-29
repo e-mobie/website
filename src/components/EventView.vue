@@ -32,7 +32,7 @@
                     </div>
 
                     <h4>General Information</h4>
-                    <div>
+                    <div class="mb-3">
                       <table>
                         <tr>
                           <td>
@@ -49,8 +49,8 @@
                             <font-awesome-icon :icon="ticketIcon" /> FEES
                           </td>
                           <td>
-                            <span v-if="tickets.length >= 0"v-for="ticket in tickets" :key="ticket._id" >${{(ticket.price * 100).toFixed(2)}}</span>
-<span v-if="tickets.length <= 0">No tickets Available</span>
+                            <span v-if="event_has_tickets" >${{min_price}} <span v-if="min_price != max_price">- ${{max_price}}</span></span>
+<span v-else>No Fees</span>
 </td>
 </tr>
 
@@ -59,7 +59,7 @@
     <font-awesome-icon :icon="calendarIcon" /> DATES
   </td>
   <td>
-    {{StartDay}} - {{FinishDay}}
+    {{StartDay}} <span v-if="!is_oneDay">- {{FinishDay}}</span>
   </td>
 </tr>
 <tr>
@@ -72,17 +72,16 @@
 </tr>
 </table>
 </div>
-<!-- <h4>Tickets</h4>
-              <div class="media">
-                <img class="mr-3" src="https://via.placeholder.com/100x100" alt="E-Mobie Ticket" />
-                <div class="media-body">
-                  <h5>General</h5>
-                </div>
-              </div> -->
+<h4>Tickets</h4>
+<div class="media">
+  <img class="mr-3" src="https://via.placeholder.com/100x100" alt="E-Mobie Ticket" />
+  <div class="media-body">
+    <h5>General</h5>
+  </div>
+</div>
 </div>
 <div class="card-footer actions-container">
-  <b-button variant="success" @click="openPurchaseDiag">Tickets</b-button>
-  <!-- <a href="#" class="btn btn-success">View Tickets</a> -->
+  <b-button variant="success" @click="openPurchaseDiag">Purchase Tickets</b-button>
 </div>
 </div>
 </div>
@@ -206,6 +205,9 @@ export default {
       // return this.flyer.startTime
       return moment(this.flyer.startTime).format("dddd, MMMM Do YYYY")
     },
+    is_oneDay() {
+      return moment(this.flyer.startTime).isSame(this.flyer.finishTime, 'day')
+    },
     FinishDay() {
       return moment(this.flyer.finishTime).local().format("dddd, MMMM Do YYYY")
     },
@@ -226,6 +228,32 @@ export default {
           }
         }
       }
+    },
+    event_has_tickets() {
+      if (this.tickets.length > 0) {
+        return true
+      } else {
+        return false
+      }
+    },
+    min_price() {
+      let minPrice = 0
+      for (var i = 0; i < this.tickets.length; i++) {
+        if (this.tickets[i].price <= minPrice) {
+          minPrice = this.tickets[i].price
+        }
+      }
+      return (minPrice * 100).toFixed(2)
+    },
+
+    max_price() {
+      let maxPrice = 0
+      for (var i = 0; i < this.tickets.length; i++) {
+        if (this.tickets[i].price >= maxPrice) {
+          maxPrice = this.tickets[i].price
+        }
+      }
+      return (maxPrice * 100).toFixed(2)
     }
   },
   methods: {

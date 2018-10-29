@@ -1,35 +1,36 @@
 <template>
-<b-list-group>
-  <b-list-group-item>
-    <b-button-group>
-      <b-button variant="outline-info" size="sm" :to="{ name: 'EditEvent', params: {email: user.email, eventkey: customerEvent._id }}">
-        <font-awesome-icon :icon="editIcon">
-        </font-awesome-icon> Edit </b-button>
+<b-list-group-item>
+  <b-button-group>
+    <b-button variant="outline-info" size="sm" :to="{ name: 'EditEvent', params: {email: user.email, eventkey: customerEvent._id }}">
+      <font-awesome-icon :icon="editIcon">
+      </font-awesome-icon> Edit
+    </b-button>
 
-      <b-button variant="outline-info" size="sm" :to="{ name: 'QrReader', params: {eventId: customerEvent._id} }">
-        <font-awesome-icon :icon="qrIcon">
-        </font-awesome-icon>
-        Ticket Scanner
-      </b-button>
+    <b-button variant="outline-info" size="sm" :to="{ name: 'QrReader', params: {eventId: customerEvent._id} }">
+      <font-awesome-icon :icon="qrIcon">
+      </font-awesome-icon>
+      Ticket Scanner
+    </b-button>
 
-      <b-button variant="outline-info" size="sm" :to="{ name: 'EventStats', params: {eventkey: customerEvent._id, email: user.email}}">
-        <font-awesome-icon :icon="chartIcon">
-        </font-awesome-icon>
-        Stats
-      </b-button>
-    </b-button-group>
+    <b-button variant="outline-info" size="sm" :to="{ name: 'EventStats', params: {eventkey: customerEvent._id, email: user.email}}">
+      <font-awesome-icon :icon="chartIcon">
+      </font-awesome-icon>
+      Stats
+    </b-button>
+  </b-button-group>
 
-    <div class="d-flex w-100 justify-content-between">
-      <h5 class="mb-1">{{customerEvent.title}}</h5>
-      <small class="text-muted">{{customerEvent.status}}</small>
+  <div class="d-flex w-100 justify-content-between">
+    <h5 class="mb-1">{{customerEvent.title}}</h5>
+    <div>
+      <small class="text-muted">{{customerEvent.eventType}}</small> - <small class="text-muted">{{customerEvent.status}}</small>
     </div>
-    <small class="text-muted">{{customerEvent.category}}</small>
-    <p class="mb-1" v-if="customerEvent.description">
-      {{ customerEvent.description }}
-    </p>
-    <p class="mb-1" v-else>Umm... you have yet to say what this awesome event is all about...</p>
-  </b-list-group-item>
-</b-list-group>
+  </div>
+  <small class="text-muted">{{customerEvent.category}}</small>
+  <p class="mb-1" v-if="customerEvent.description">
+    {{ customerEvent.description }}
+  </p>
+  <p class="mb-1" v-else>Umm... you have yet to say what this awesome event is all about...</p>
+</b-list-group-item>
 </template>
 
 <script>
@@ -63,6 +64,16 @@ export default {
           return true
         } else {
           return false
+        }
+      }
+    },
+
+    private() {
+      if (this.customerEvent != null) {
+        if (this.customerEvent.eventType == 'Public') {
+          return false
+        } else if (this.customerEvent.eventType == 'Private') {
+          return true
         }
       }
     }

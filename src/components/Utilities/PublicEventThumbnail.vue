@@ -1,10 +1,12 @@
 <template>
 <div class="card event-card">
-  <div class="event-card-img-container">
-    <b-img :src="thumbnail" v-if="has_thumbnail"></b-img>
-    <b-img v-else class="card-img-top" :src="flyerImageSrc" :class="flyer-thumbnail" />
-    <b-button variant="default" size="sm">FREE</b-button>
-  </div>
+  <router-link :to="{name: 'EventView', params: { email: this.flyer.publisher, eventkey: this.flyer._id}}">
+    <div class="event-card-img-container">
+      <b-img :src="thumbnail" v-if="has_thumbnail"></b-img>
+      <b-img v-else class="card-img-top" :src="flyerImageSrc" :class="flyer-thumbnail" />
+      <b-button variant="default" size="sm">FREE</b-button>
+    </div>
+  </router-link>
   <div class="card-body event-card-info-container">
     <h5 class="event-card-title">{{flyer.title}}</h5>
     <p class="event-card-description">
@@ -44,6 +46,10 @@
 </template>
 
 <style type="scss">
+.event-card {
+  box-shadow: 1px 1px 3px #E0E0E0;
+}
+
 .card-mod {
   color: black;
   font-weight: normal;

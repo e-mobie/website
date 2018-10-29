@@ -8,15 +8,33 @@
   <div class="row">
     <div class="col-md-6">
       <p>
-        By entering your email address you confirm your RSVP, You will also recieve an E-Pass in your inbox.
+        By entering your email address and verifing your information you are confirming your RSVP, You will also recieve an E-Pass in your inbox.
       </p>
     </div>
     <div class="col-md-6 ">
       <form class="form" @submit.prevent="submitRSVPconfirmation">
         <div class="form-group">
-          <input type="email" class="form-control" placeholder="Enter your email" v-model="confirmed_email"/>
+          <input type="text" class="form-control" placeholder="Your Name" />
+        </div>
+          <div class="form-group">
+            <input type="date" class="form-control" />
+        </div>
+            <div class="form-check">
+              <input type="radio" class="form-check-input" name="male_person" id="male_person" />
+              <label class="form-check-label" for="male_person">
+            Male
+          </label>
+            </div>
+            <div class="form-check">
+              <input type="radio" class="form-check-input" male="female_person" id="female_person" />
+              <label class="form-check-label" for="female_person">
+            Female
+          </label>
+            </div>
+            <div class="form-group">
+              <input type="email" class="form-control" placeholder="Enter your email" v-model="confirmed_email"/>
           </div>
-          <button type="submit" class="btn btn-success" :disabled="loading">Submit Confirmation</button>
+              <button type="submit" class="btn btn-success" :disabled="loading">Submit Confirmation</button>
       </form>
     </div>
   </div>
@@ -31,6 +49,7 @@
 import swal from 'sweetalert2'
 import axios from 'axios'
 export default {
+  //validate invite
   data() {
     return {
       loading: false,
