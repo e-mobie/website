@@ -1,0 +1,67 @@
+@import "variables";
+
+html {
+  // font-size: xx-small;
+}
+
+body {
+    font-family: $text-font, sans-serif;
+    background-color: $white;
+}
+
+.navbar-light {
+
+    .navbar-brand {
+        color: $richblue;
+        font-family: $display-font, sans-serif;
+        font-weight: 700;
+    }
+
+    .navbar-brand:hover {
+        color: darken($richblue, 12.5%);
+    }
+
+    .nav-item {
+        .nav-link {
+            color: $black;
+            font-size: 0.8rem;
+            transition: color 0.125s;
+        }
+
+        .nav-link:hover {
+            color: $richblue;
+        }
+    }
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    font-family: $display-font, sans-serif;
+    line-height: 1;
+    border-radius: 1rem;
+    padding: 0.5rem 1.75rem;
+    font-size: 0.75rem;
+    font-weight: bold;
+    // color: $grey;
+    // background-color: $lightgrey;
+}
+
+.btn:hover {
+    // background-color: darken($lightgrey, 12.5%);
+}
+
+.btn-sm {
+    padding-top: 0.375rem;
+    padding-bottom: 0.375rem;
+}
+
+.btn-primary {
+    color: $white;
+    background-color: $richblue;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: darken($richblue, 12.5%);
+}

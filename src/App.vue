@@ -1,28 +1,47 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+<span id="app">
+  <NavigationBar></NavigationBar>
+  <router-view></router-view>
+</span>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import NavigationBar from './components/NavigationBar.vue'
+import EventView from './components/EventView.vue'
+import SocketIO from 'socket.io-client'
 export default {
-  name: 'app',
+  name: 'e-mobie-homepage',
   components: {
-    HelloWorld
-  }
+    NavigationBar,
+    EventView
+  },
+  data() {
+    return {
+      publicSocket: null
+    }
+  },
+  created() {
+    this.$store.dispatch('init')
+  },
+  mounted: function() {
+    let socket = SocketIO(process.env.VUE_APP_API_URL)
+    this.publicSocket = socket
+    this.publicSocket.on('CUSTOMER_NOTIFICATION', (eventObject) => {
+      switch (eventObject.message) {
+        case 'EVENT_PUBLISHED':
+          console.log(eventObject);
+          this.$store.dispatch('events/addToPublishedEvents', eventObject)
+          break;
+        case 'EVENT_CANCELED':
+          console.log(eventObject);
+          this.$store.dispatch('events/removePublishedEvent', eventObject.redis.data._id)
+        default:
+
+      }
+    })
+  },
 }
 </script>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style lang="scss">
+@import './assets/index';
 </style>

@@ -1,0 +1,225 @@
+@import "variables";
+
+.search-container {
+    background: linear-gradient(0deg, rgba($richblue, 0.45), rgba($richblue, 0.45)),
+                url('/img/background.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+
+    margin-bottom: 2.5rem;
+}
+
+.search-title {
+    color: $white;
+    font-family: $display-font;
+    font-weight: 700;
+    font-size: 2.25rem;
+    text-align: center;
+}
+
+.search-box-container {
+    text-align: center;
+}
+
+.search-row {
+    margin: 1rem 0 2.5rem 0;
+
+    input {
+        border: none;
+        font-size: 0.8rem;
+        vertical-align: middle;
+
+        outline: none;
+    }
+
+    img {
+        height: 1rem;
+        width: auto;
+    }
+
+    .col-12 {
+        text-align: center;
+    }
+
+    .section-wrapper {
+        background-color: $white;
+        display: inline-block;
+        border-radius: 0.5rem;
+    }
+
+    .section {
+        display: inline-block;
+        padding: 0.5rem 0.5rem;
+    }
+
+    .section-border {
+        position: absolute;
+        display: inline;
+        width: 1px;
+        height: 100%;
+        background-color: rgba($black, 0.125);
+    }
+
+    .location-section {
+        input {
+            width: 10rem;
+        }
+
+        .btn {
+            font-size: 0.5rem;
+        }
+
+        .btn img {
+            margin-right: 0.6rem;
+            height: 0.8rem;
+            width: auto;
+        }
+    }
+
+    .text-section {
+        padding-left: 1.25rem;
+    }
+
+    .btn {
+        padding: 0.25rem 0.5rem;
+    }
+}
+
+.popular-searches-icon {
+    margin-bottom: 0.25rem;
+
+    > div {
+        text-align: center;
+    }
+
+    img {
+        height: 1rem;
+        width: auto;
+    }
+}
+
+.popular-searches-title {
+    margin-bottom: 0.5rem;
+
+    > div {
+        text-align: center;
+    }
+
+    span {
+        color: $white;
+        // font-size: 1rem;
+    }
+}
+
+.popular-searches-buttons {
+    > div {
+        text-align: center;
+    }
+
+    .btn {
+        margin: 0.5rem;
+    }
+}
+
+.event-card-container {
+    margin-top: 2.5rem;
+    // margin: 2.5rem 2.5rem;
+
+    .event-card {
+        border-radius: 1rem;
+        // border: 1px solid green;
+        overflow: hidden;
+    }
+
+    .event-card-img-container .btn {
+        position: absolute;
+        top: 2.5%;
+        left: 70%;
+    }
+
+    .event-card-img-container img {
+        width: 100%;
+        object-fit: cover;
+        // height: auto;
+        max-height: 350px;
+        // background: linear-gradient(0deg, rgba($richblue, 0.45), rgba($richblue, 0.45))
+                    // url('../img/background.jpg');
+        // background-repeat: no-repeat;
+        // background-size: cover;
+        // background-position: center;
+    }
+
+    .event-card-info-container {
+        // margin: 0.75rem 1.25rem;
+
+        .event-type {
+            margin-top: 0.75rem;
+        }
+
+        .event-card-title {
+            font-family: $display-font;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: $black;
+            // margin-top: 0.8rem;
+        }
+
+        .event-card-description {
+            margin-top: 0.25rem;
+            font-size: 0.8rem;
+            color: $grey;
+        }
+    }
+
+    .general-info {
+        margin-top: 0.5rem;
+        margin-bottom: 2rem;
+        font-size: 0.85rem;
+
+        .general-info-title {
+            font-family: $display-font;
+            font-size: 0.90rem;
+            font-weight: 700;
+        }
+
+        .label-location {
+          font-family: $display-font;
+          font-weight: lighter;
+          margin-right: 5%;
+          font-size: 0.15rem;
+          color: $grey
+        }
+
+        .label-Fees {
+          font-family: $display-font;
+          font-weight: lighter;
+          margin-right: 10%;
+          font-size: 0.15rem;
+          color: $grey
+        }
+
+        .label-Dates {
+          font-family: $display-font;
+          font-weight: lighter;
+          margin-right: 9%;
+          font-size: 0.15rem;
+          color: $grey
+        }
+
+        .label-Time {
+          font-family: $display-font;
+          font-weight: lighter;
+          margin-right: 10%;
+          font-size: 0.15rem;
+          color: $grey
+        }
+
+        .general-info-details p{
+          margin-bottom: 0.3rem;
+        }
+    }
+}
