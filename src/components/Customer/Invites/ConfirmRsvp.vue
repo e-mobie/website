@@ -56,7 +56,7 @@ export default {
   mounted() {
     let url = process.env.VUE_APP_API_URL + '/invite/' + this.$route.params.invite_id + '/validate'
     axios.get(url).then((response) => {
-      // console.log(response.data);
+      console.log(response.data);
       if (!response.data.valid) {
         swal({
           type: 'error',
