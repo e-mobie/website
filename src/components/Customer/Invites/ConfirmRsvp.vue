@@ -38,6 +38,9 @@
           <input type="tel" class="form-control" placeholder="1-242-555-5555 (optional)" v-model="phone" />
         </div>
         <button type="submit" class="btn btn-success" :disabled="loading">Submit Confirmation</button>
+        <span v-show="loading">
+          <spinner></spinner>
+        </span>
       </form>
     </div>
   </div>
@@ -49,9 +52,13 @@
 </style>
 
 <script>
+import spinner from 'vue-loading-spinner/src/components/Circle'
 import swal from 'sweetalert2'
 import axios from 'axios'
 export default {
+  components: {
+    spinner
+  },
   //validate invite
   mounted() {
     let url = process.env.VUE_APP_API_URL + '/invite/' + this.$route.params.invite_id + '/validate'
