@@ -56,8 +56,7 @@ export default {
   mounted() {
     let url = process.env.VUE_APP_API_URL + '/invite/' + this.$route.params.invite_id + '/validate'
     axios.get(url).then((response) => {
-      console.log(response.data);
-      if (!response.data.valid) {
+      if (!response.data.Valid) {
         swal({
           type: 'error',
           title: 'Invite Expired',
