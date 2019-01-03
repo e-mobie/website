@@ -66,7 +66,7 @@ export default {
       if (!response.data.Valid) {
         swal({
           type: 'error',
-          title: 'Invite Expired',
+          title: 'Invite Expired!',
           text: 'Your invite is invalid'
         }).then((response) => {
           if (response.value) {
