@@ -164,6 +164,10 @@ export default {
       this.pauseCamera = true
       this.showLoading = true
       let queryString = content.slice(1).split('&')
+      this.$store.dispatch('LogToSlack', {
+        headline: 'testingStringInput',
+        log: queryString
+      })
       let queryObject = {}
       queryString.forEach(function(pair) {
         pair = pair.split('=');
@@ -175,45 +179,45 @@ export default {
         log: result
       })
       this.qrCodeData = result
-      swal({
-        title: 'Successfull Validation',
-        text: 'Allow entry',
-        type: 'success'
+
+      axios.create({
+        withCredentials: true
+      }).post(process.env.VUE_APP_API_URL + '/purchaseOrder/' + this.eventId + '/' +
+        this.qrCodeData.invoiceId + '/validate', this.qrCodeData).then((response) => {
+        // console.log(response);
+        this.$store.dispatch('LogToSlack', {
+          headline: 'Testing Api Response',
+          log: response
+        })
+        if (response.data.success) {
+          this.invoice = response.data.invoice
+          this.show_invoice = true
+        } else if (response.data.success == false) {
+          this.showLoading = false
+          if (response.data.error.message != null) {
+            swal({
+              title: response.data.message,
+              text: response.data.error.message,
+              type: 'error'
+            }).then((result) => {
+              this.pauseCamera = false
+            })
+          } else {
+            swal({
+              title: response.data.message,
+              text: response.data.message,
+              type: 'error'
+            }).then((result) => {
+              this.pauseCamera = false
+            })
+          }
+        }
+      }).catch((error) => {
+        console.log(error);
+        this.showLoading = false
+        this.pauseCamera = false
+        swal.showValidationError(error.message)
       })
-      // axios.create({
-      //   withCredentials: true
-      // }).post(process.env.VUE_APP_API_URL + '/purchaseOrder/' + this.eventId + '/' +
-      //   this.qrCodeData.invoiceId + '/validate', this.qrCodeData).then((response) => {
-      //   console.log(response);
-      //   if (response.data.success) {
-      //     this.invoice = response.data.invoice
-      //     this.show_invoice = true
-      //   } else if (response.data.success == false) {
-      //     this.showLoading = false
-      //     if (response.data.error.message != null) {
-      //       swal({
-      //         title: response.data.message,
-      //         text: response.data.error.message,
-      //         type: 'error'
-      //       }).then((result) => {
-      //         this.pauseCamera = false
-      //       })
-      //     } else {
-      //       swal({
-      //         title: response.data.message,
-      //         text: response.data.message,
-      //         type: 'error'
-      //       }).then((result) => {
-      //         this.pauseCamera = false
-      //       })
-      //     }
-      //   }
-      // }).catch((error) => {
-      //   console.log(error);
-      //   this.showLoading = false
-      //   this.pauseCamera = false
-      //   swal.showValidationError(error.message)
-      // })
     }
   }
 }
