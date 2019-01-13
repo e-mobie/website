@@ -163,27 +163,14 @@ export default {
       console.log(content);
       this.pauseCamera = true
       this.showLoading = true
-      let queryString = content.slice(1).split('&')
-      this.$store.dispatch('LogToSlack', {
-        headline: 'testingStringInput',
-        log: queryString
-      })
-      let queryObject = {}
-      queryString.forEach(function(pair) {
-        pair = pair.split('=');
-        queryObject[pair[0]] = decodeURIComponent(pair[1] || '');
-      })
-      let result = JSON.parse(JSON.stringify(queryObject))
       this.$store.dispatch('LogToSlack', {
         headline: 'QueryString',
-        log: result
+        log: content
       })
-      this.qrCodeData = result
 
       axios.create({
         withCredentials: true
-      }).post(process.env.VUE_APP_API_URL + '/purchaseOrder/' + this.eventId + '/' +
-        this.qrCodeData.invoiceId + '/validate', this.qrCodeData).then((response) => {
+      }).post(process.env.VUE_APP_API_URL + '/purchaseOrder/' + this.eventId + '/redeemqr', content).then((response) => {
         // console.log(response);
         this.$store.dispatch('LogToSlack', {
           headline: 'Testing Api Response',
