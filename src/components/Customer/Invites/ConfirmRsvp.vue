@@ -94,6 +94,7 @@ export default {
       axios.create({
         withCredentials: true,
       }).post(url, this.$data).then((response) => {
+        // console.log(response.data);
         if (response.data.body != null) {
           swal({
             title: 'See You There, :)',
