@@ -79,7 +79,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios'
 import swal from 'sweetalert2'
-import $ from 'jquery'
 
 export default {
   props: ['eventId'],
@@ -212,7 +211,6 @@ export default {
         //   headline: 'Testing Api Response',
         //   log: response
         // })
-        $('#invoice_Screen').modal('show')
         if (response.data.success) {
           this.invoice = response.data.invoice
           // show invoice

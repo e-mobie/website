@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import $ from 'jquery'
 import BootstrapVue from 'bootstrap-vue'
 Vue.use(BootstrapVue)
 import './assets/bootstrap.min.css'
