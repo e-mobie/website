@@ -1,19 +1,22 @@
 <template>
-<div class="container">
-  <div class="row p-3">
-    <div class="col">
-      <router-link class="btn btn-outline-default" :to="{ name: 'CustomerEventList'}">Back to Event Menu</router-link>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col">
-      <div class="alert alert-primary">Please allow E-Mobie to Access your devices' camera</div>
-      <div class="alert alert-danger" v-if="has_error">
-        {{error.toString()}}
+<span>
+  <div class="container">
+    <div class="row p-3">
+      <div class="col">
+        <router-link class="btn btn-outline-default" :to="{ name: 'CustomerEventList'}">Back to Event Menu</router-link>
       </div>
     </div>
+    <div class="row">
+      <div class="col">
+        <div class="alert alert-primary">Please allow E-Mobie to Access your devices' camera</div>
+        <div class="alert alert-danger" v-if="has_error">
+          {{error.toString()}}
+        </div>
+      </div>
+    </div>
+    <qrcode-stream :paused="pauseCamera" @init="onInit" @decode="onDecode" @locate="onLocate" :track="repaintLocation"></qrcode-stream>
+
   </div>
-  <qrcode-stream :paused="pauseCamera" @init="onInit" @decode="onDecode" @locate="onLocate" :track="repaintLocation"></qrcode-stream>
 
   <div class="modal" tabindex="-1" role="dialog" id="LoadingScreen" v-model="showLoading">
     <div class="modal-dialog" role="document">
@@ -61,8 +64,7 @@
       </div>
     </div>
   </div>
-
-</div>
+</span>
 </template>
 
 <script>
@@ -205,15 +207,16 @@ export default {
       axios.create({
         withCredentials: true
       }).post(process.env.VUE_APP_API_URL + '/invoice/' + qrData.invoiceId + '/verifyQr', qrData).then((response) => {
-        console.log(response);
-        this.$store.dispatch('LogToSlack', {
-          headline: 'Testing Api Response',
-          log: response
-        })
+        // console.log(response);
+        // this.$store.dispatch('LogToSlack', {
+        //   headline: 'Testing Api Response',
+        //   log: response
+        // })
+        $('#invoice_Screen').modal('show')
         if (response.data.success) {
           this.invoice = response.data.invoice
           // show invoice
-          $('#invoice_Screen').modal('toggle')
+          $('#invoice_Screen').modal('show')
         } else if (response.data.success == false) {
           this.showLoading = false
           if (response.data.message != null) {
