@@ -196,21 +196,17 @@ export default {
       console.log(content);
       this.pauseCamera = true
       this.showLoading = true
-      this.$store.dispatch('LogToSlack', {
-        headline: 'QueryString',
-        log: content
-      })
       let qrData = JSON.parse('{"' + decodeURI(content.replace('?', '').replace(/&/g, "\",\"").replace(/=/g, "\":\"")) + '"}')
       qrData.scanner_event_id = this.eventId
 
       axios.create({
         withCredentials: true
       }).post(process.env.VUE_APP_API_URL + '/invoice/' + qrData.invoiceId + '/verifyQr', qrData).then((response) => {
-        // console.log(response);
-        // this.$store.dispatch('LogToSlack', {
-        //   headline: 'Testing Api Response',
-        //   log: response
-        // })
+        console.log(response);
+        this.$store.dispatch('LogToSlack', {
+          headline: 'Testing Api Response',
+          log: response
+        })
         if (response.data.success) {
           this.invoice = response.data.invoice
           // show invoice
