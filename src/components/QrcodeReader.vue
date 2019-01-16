@@ -1,42 +1,73 @@
 <template>
-<b-container>
-  <b-alert variant="warning">Please allow E-Mobie to Access your devices' camera</b-alert>
-  <b-alert variant="danger" :show="has_error">
-    {{error.toString()}}
-  </b-alert>
-  <b-row>
-    <b-col>
-      <b-button variant="outline-info" :to="{ name: 'CustomerEventList'}">Back to Event Menu</b-button>
-    </b-col>
-  </b-row>
-  <b-row>
-    <b-col>
-    </b-col>
-  </b-row>
-  <b-row>
-    <b-col>
-      <qrcode-reader :paused="pauseCamera" @init="onInit" @decode="onDecode" @locate="onLocate" :track="repaintLocation"></qrcode-reader>
-    </b-col>
-  </b-row>
-  <b-modal id="LoadingScreen" v-model="showLoading" title="One Moment Please..." hide-footer>
-  </b-modal>
+<div class="container">
+  <div class="row p-3">
+    <div class="col">
+      <router-link class="btn btn-outline-default" :to="{ name: 'CustomerEventList'}">Back to Event Menu</router-link>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="alert alert-primary">Please allow E-Mobie to Access your devices' camera</div>
+      <div class="alert alert-danger" v-if="has_error">
+        {{error.toString()}}
+      </div>
+    </div>
+  </div>
+  <qrcode-stream :paused="pauseCamera" @init="onInit" @decode="onDecode" @locate="onLocate" :track="repaintLocation"></qrcode-stream>
 
-  <b-modal id="invoiceScreen" v-model="show_invoice" title="The Guest List.." @hidden="resumeCamera" @ok="submitConfirmed">
-    Verify and confirm guest list
-    <hr />
-    <b-list-group>
-      <b-list-group-item v-for="(item, item_index) in invoice.contents" :key="item_index" href="#" @click="addToConfirmed(item, item_index)" :disabled="!item.outstanding">
-        <span v-if="item.outstanding" class="float-right">Click to Confirm</span>
-        <font-awesome-icon :icon="checkIcon" v-if="!item.outstanding" class="float-right" size="lg" /> First Name: {{item.f_name}} <br /> Last Name: {{item.l_name}} <br /> Email Address: {{item.email}} <br /> Gender: {{item.gender}}
-      </b-list-group-item>
-    </b-list-group>
-  </b-modal>
-</b-container>
+  <div class="modal" tabindex="-1" role="dialog" id="LoadingScreen" v-model="showLoading">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">One Moment Please....</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>
+            Loading...
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" tabindex="-1" role="dialog" id="LoadingScreen" v-model="showLoading">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">One Moment Please....</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>
+            Verify and confirm guest list.
+          </p>
+          <div class="list-group">
+            <li class="list-group-item" v-for="(item, item_index) in invoice.contents" :key="item_index" @click="addToConfirmed(item, item_index)" :disabled="!item.outstanding">
+              <span v-if="item.outstanding" class="float-right">Click to Confirm</span>
+              <font-awesome-icon :icon="checkIcon" v-if="!item.outstanding" class="float-right" size="lg">
+                First Name: {{item.f_name}} <br />
+                Last Name: {{item.l_name}} <br />
+                Email Address: {{item.email}} <br />
+                Gender: {{item.gender}} <br />
+              </font-awesome-icon>
+            </li>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
 </template>
 
 <script>
 import {
-  QrcodeReader
+  QrcodeStream
 } from 'vue-qrcode-reader'
 import {
   FontAwesomeIcon
@@ -50,7 +81,7 @@ import swal from 'sweetalert2'
 export default {
   props: ['eventId'],
   components: {
-    QrcodeReader,
+    QrcodeStream,
     FontAwesomeIcon
   },
 
@@ -59,7 +90,7 @@ export default {
       checkIcon: faCheckCircle,
       pauseCamera: false,
       has_error: false,
-      error: {},
+      error: '',
       showLoading: false,
       show_invoice: false,
       invoice: {},
@@ -113,11 +144,11 @@ export default {
     },
     async onInit(promise) {
       // show loading indicator
-      // this.cameraLoading = true
+      this.cameraLoading = true
       try {
         await promise
-        // this.cameraLoading = false
-        // this.cameraOn = true
+        this.cameraLoading = false
+        this.cameraOn = true
 
         // successfully initialized
       } catch (error) {
@@ -148,8 +179,8 @@ export default {
         }
       } finally {
         // hide loading indicator
-        // this.cameraLoading = false
-        // this.cameraOn = true
+        this.cameraLoading = false
+        this.cameraOn = true
       }
     },
     onLocate: function(points) {
@@ -167,11 +198,13 @@ export default {
         headline: 'QueryString',
         log: content
       })
+      let qrData = JSON.parse('{"' + decodeURI(content.replace('?', '').replace(/&/g, "\",\"").replace(/=/g, "\":\"")) + '"}')
+      qrData.scanner_event_id = this.eventId
 
       axios.create({
         withCredentials: true
-      }).post(process.env.VUE_APP_API_URL + '/purchaseOrder/' + this.eventId + '/redeemqr', content).then((response) => {
-        // console.log(response);
+      }).post(process.env.VUE_APP_API_URL + '/invoice/' + qrData.invoiceId + '/verifyQr', qrData).then((response) => {
+        console.log(response);
         this.$store.dispatch('LogToSlack', {
           headline: 'Testing Api Response',
           log: response
@@ -203,9 +236,38 @@ export default {
         console.log(error);
         this.showLoading = false
         this.pauseCamera = false
-        swal.showValidationError(error.message)
+        swal.showValidationMessage(error.message)
       })
     }
   }
 }
 </script>
+<style lang="css">
+.qrcode-stream {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+  align-items: center;
+}
+.qrcode-stream__inner-wrapper {
+  position: relative;
+  max-width: 100%;
+  max-height: 100%;
+  z-index: 0;
+}
+.qrcode-stream__overlay,
+.qrcode-stream__tracking-layer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+.qrcode-stream__camera,
+.qrcode-stream__pause-frame {
+  display: block;
+  object-fit: contain;
+  max-width: 100%;
+  max-height: 100%;
+}
+</style>
