@@ -214,10 +214,10 @@ export default {
           this.show_invoice = true
         } else if (response.data.success == false) {
           this.showLoading = false
-          if (response.data.error.message != null) {
+          if (response.data.message != null) {
             swal({
               title: response.data.message,
-              text: response.data.error.message,
+              text: response.data.message,
               type: 'error'
             }).then((result) => {
               this.pauseCamera = false
