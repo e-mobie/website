@@ -33,11 +33,11 @@
     </div>
   </div>
 
-  <div class="modal" tabindex="-1" role="dialog" id="LoadingScreen" v-model="showLoading">
+  <div class="modal" tabindex="-1" role="dialog" id="invoice_Screen">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">One Moment Please....</h5>
+          <h5 class="modal-title">Invoice Guest List</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -77,6 +77,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios'
 import swal from 'sweetalert2'
+import $ from 'jquery'
 
 export default {
   props: ['eventId'],
@@ -211,7 +212,8 @@ export default {
         })
         if (response.data.success) {
           this.invoice = response.data.invoice
-          this.show_invoice = true
+          // show invoice
+          $('#invoice_Screen').modal('toggle')
         } else if (response.data.success == false) {
           this.showLoading = false
           if (response.data.message != null) {
