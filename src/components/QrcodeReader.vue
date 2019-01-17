@@ -79,6 +79,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios'
 import swal from 'sweetalert2'
+import $ from 'jquery'
 
 export default {
   props: ['eventId'],
