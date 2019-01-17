@@ -36,34 +36,22 @@
     </div>
   </div>
 
-  <div class="modal" tabindex="-1" role="dialog" id="invoice_Screen">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Invoice Guest List</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <p>
-            Verify and confirm guest list.
-          </p>
-          <div class="list-group">
-            <li class="list-group-item" v-for="(item, item_index) in invoice.contents" :key="item_index" @click="addToConfirmed(item, item_index)" :disabled="!item.outstanding">
-              <span v-if="item.outstanding" class="float-right">Click to Confirm</span>
-              <font-awesome-icon :icon="checkIcon" v-if="!item.outstanding" class="float-right" size="lg">
-                First Name: {{item.f_name}} <br />
-                Last Name: {{item.l_name}} <br />
-                Email Address: {{item.email}} <br />
-                Gender: {{item.gender}} <br />
-              </font-awesome-icon>
-            </li>
-          </div>
-        </div>
-      </div>
+  <b-modal ref="invoice_Screen_modal" id="invoice_Screen" title="Invoice Guest List">
+    <p>
+      Verify and confirm guest list.
+    </p>
+    <div class="list-group">
+      <li class="list-group-item" v-for="(item, item_index) in invoice.contents" :key="item_index" @click="addToConfirmed(item, item_index)" :disabled="!item.outstanding">
+        <span v-if="item.outstanding" class="float-right">Click to Confirm</span>
+        <font-awesome-icon :icon="checkIcon" v-if="!item.outstanding" class="float-right" size="lg">
+          First Name: {{item.f_name}} <br />
+          Last Name: {{item.l_name}} <br />
+          Email Address: {{item.email}} <br />
+          Gender: {{item.gender}} <br />
+        </font-awesome-icon>
+      </li>
     </div>
-  </div>
+  </b-modal>
 </span>
 </template>
 
@@ -79,7 +67,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios'
 import swal from 'sweetalert2'
-import $ from 'jquery'
 
 export default {
   props: ['eventId'],
@@ -211,7 +198,7 @@ export default {
         if (response.data.success) {
           this.invoice = response.data.invoice
           // show invoice
-          $('#invoice_Screen').modal('show')
+          this.$refs.invoice_Screen_modal.show()
         } else if (response.data.success == false) {
           this.showLoading = false
           if (response.data.message != null) {
