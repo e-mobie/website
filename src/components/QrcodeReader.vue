@@ -44,10 +44,8 @@
       <li class="list-group-item" v-for="(item, item_index) in invoice.contents" :key="item_index" @click="addToConfirmed(item, item_index)" :disabled="!item.outstanding">
         <span v-if="item.outstanding" class="float-right">Click to Confirm</span>
         <font-awesome-icon :icon="checkIcon" v-if="!item.outstanding" class="float-right" size="lg">
-          First Name: {{item.f_name}} <br />
-          Last Name: {{item.l_name}} <br />
+          Name: {{item.name}} <br />
           Email Address: {{item.email}} <br />
-          Gender: {{item.gender}} <br />
         </font-awesome-icon>
       </li>
     </div>
