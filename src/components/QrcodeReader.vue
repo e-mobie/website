@@ -42,7 +42,7 @@
     </p>
     <div class="list-group">
       <li class="list-group-item" v-for="(item, item_index) in invoice.contents" :key="item_index" @click="addToConfirmed(item, item_index)" :disabled="!item.outstanding">
-        <span v-if="item.outstanding" class="float-right">Click to Confirm</span>
+        <span v-if="(!item.scanned_in || !item.signed_in)" class="float-right">Click to Confirm</span>
         <font-awesome-icon :icon="checkIcon" v-if="!item.outstanding" class="float-right" size="lg">
           Name: {{item.name}} <br />
           Email Address: {{item.email}} <br />
