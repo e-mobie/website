@@ -110,7 +110,7 @@ export default {
           dob: this.$store.state.user.user.dob,
           phone: "",
           guest_spot: false,
-          signed_in: true
+          scanned_in: true
         }]
       },
     }
