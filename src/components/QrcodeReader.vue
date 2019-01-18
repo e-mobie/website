@@ -196,7 +196,7 @@ export default {
         if (response.data.success) {
           this.invoice = response.data.invoice
           // show invoice
-          alert(this.invoice)
+          console.log(this.invoice)
           this.$refs.invoice_Screen_modal.show()
         } else if (response.data.success == false) {
           this.showLoading = false
