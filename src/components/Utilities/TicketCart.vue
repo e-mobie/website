@@ -110,7 +110,7 @@ export default {
           dob: this.$store.state.user.user.dob,
           phone: "",
           guest_spot: false,
-          scanned_in: true
+          scanned_in: false
         }]
       },
     }
@@ -167,7 +167,7 @@ export default {
         phone: "",
         dob: "",
         guest_spot: false,
-        signed_in: false,
+        scanned_in: false,
       })
       let height = this.$refs.ticketRell.clientHeight
       $('#ticketRell').animate({

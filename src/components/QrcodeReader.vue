@@ -36,12 +36,12 @@
     </div>
   </div>
 
-  <b-modal ref="invoice_Screen_modal" id="invoice_Screen" title="Invoice Guest List">
+  <b-modal ref="invoice_Screen_modal" id="invoice_Screen" title="Invoice Guest List" @ok="submitConfirmed">
     <p>
       Verify and confirm guest list.
     </p>
     <div class="list-group">
-      <rsvp-item v-for="(item, item_index) in invoice.contents" :key="item_index" @click="addToConfirmed(item, item_index)" :item="item"></rsvp-item>
+      <rsvp-item v-for="(item, item_index) in invoice.contents" :key="item_index" :item="item" :array_index="item_index" v-on:guest_verified="addToConfirmed"></rsvp-item>
     </div>
   </b-modal>
 </span>
@@ -52,12 +52,6 @@ import rsvpItem from './Utilities/invoice_item_rsvp.vue'
 import {
   QrcodeStream
 } from 'vue-qrcode-reader'
-import {
-  FontAwesomeIcon
-} from '@fortawesome/vue-fontawesome';
-import {
-  faCheckCircle
-} from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios'
 import swal from 'sweetalert2'
 
@@ -65,13 +59,11 @@ export default {
   props: ['eventId'],
   components: {
     QrcodeStream,
-    FontAwesomeIcon,
     rsvpItem
   },
 
   data: function() {
     return {
-      checkIcon: faCheckCircle,
       pauseCamera: false,
       has_error: false,
       error: '',
@@ -83,23 +75,36 @@ export default {
   },
   methods: {
     submitConfirmed() {
-      let url = process.env.VUE_APP_API_URL + '/invoice/' + this.eventId + '/' + this.invoice._id + '/redeem'
+      let url = process.env.VUE_APP_API_URL + '/invoice/' + this.invoice._id + '/redeemqr'
       axios.create({
         withCredentials: true
       }).post(url, {
-        purchaseOrderId: this.eventId,
+        scanner_event_id: this.eventId,
         GuestList: this.confirmed
       }).then((results) => {
         this.confirmed = []
-        console.log(results);
+        if (results.data.success) {
+          swal.fire({
+            type: 'success',
+            title: 'Checked In',
+            text: 'Invoice Updated'
+          })
+          this.pauseCamera = false
+        }
       })
     },
-    addToConfirmed(item, item_index) {
-      if (item.outstanding) {
-        let currentConfirmedGuests = this.confirmed
-        this.invoice.contents[item_index].outstanding = false
-        currentConfirmedGuests.push(this.invoice.contents[item_index])
+    addToConfirmed(item) {
+      console.log(item);
+      // if (item.outstanding) {
+      let currentConfirmedGuests = this.confirmed
+      if (this.invoice.contents[item.index].outstanding != null) {
+        this.invoice.contents[item.index].outstanding = false
+        this.invoice.contents[item.index].scanned_in = true
+      } else {
+        this.invoice.contents[item.index].scanned_in = true
       }
+      currentConfirmedGuests.push(item)
+      // }
     },
     resumeCamera() {
       this.pauseCamera = false
@@ -179,6 +184,7 @@ export default {
       this.pauseCamera = true
       this.showLoading = true
       let qrData = JSON.parse('{"' + decodeURI(content.replace('?', '').replace(/&/g, "\",\"").replace(/=/g, "\":\"")) + '"}')
+      console.log(qrData);
       qrData.scanner_event_id = this.eventId
 
       axios.create({
