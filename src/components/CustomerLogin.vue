@@ -29,7 +29,12 @@
 
 <script>
 import swal from 'sweetalert2'
+import facebookLogin from 'facebook-login-vuejs';
+
 export default {
+  components: {
+    facebookLogin
+  },
   data: function() {
     return {
       loading: false,

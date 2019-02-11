@@ -1,148 +1,157 @@
 <template>
 <span>
-  <div class="container-fluid booklet-container">
-    <div class="container booklet-content">
-      <div class="row no-gutters">
-        <div class="col-md-6 flyer-image-container rounded-left d-flex align-items-center">
-          <div id="carouselExampleSlidesOnly" class="carousel slide carousel-fade" data-ride="carousel">
-            <div class="carousel-inner">
-              <div class="carousel-item active">
-                <img class="d-block w-100" :src="flyerImg" alt="First slide">
+  <section id="showcase" class="showcase grid">
+
+    <div class="overlay"></div>
+
+
+    <div class="details-card-container detail-grid">
+      <div class="row">
+        <div class="col">
+          <!-- Image Showcase -->
+          <div class="p-2" style="text-align: center;">
+            <!-- Position div  -->
+            <div class="details-img-container detail-grid-box1" style="display: inline-block;">
+              <!-- Size div -->
+              <img :src="flyerImg" class="img-thumbnail">
+            </div>
+          </div>
+          <div class=" m-3" style="max-width: 450px; text-align: center;">
+            <img src="https://via.placeholder.com/100" alt="..." class="img-thumbnail m-1">
+            <img src="https://via.placeholder.com/100" alt="..." class="img-thumbnail m-1">
+            <img src="https://via.placeholder.com/100" alt="..." class="img-thumbnail m-1">
+            <img src="https://via.placeholder.com/100" alt="..." class="img-thumbnail m-1">
+            <img src="https://via.placeholder.com/100" alt="..." class="img-thumbnail m-1">
+          </div>
+
+        </div>
+        <div class="col-md-6">
+          <div class="details-info-container detail-grid-box2 p-3">
+            <button class="detail-price">Public</button>
+
+            <h1>{{flyer.title}}</h1>
+
+            <p>{{flyer.description}}</p>
+
+            <h3>General Information</h3>
+
+
+            <div class="general-info">
+
+              <div class="info">
+                <span class="icon"><i class="fas fa-map-marker-alt"></i></span>
+                <p>Location: {{locationData.formatted_address}}</p>
               </div>
-                <div class="carousel-item">
-                  <img class="d-block w-100" src="https://via.placeholder.com/350x150" alt="Second slide">
+
+
+              <div class="info">
+                <span class="icon"><i class="fas fa-dollar-sign"></i></span>
+                <p>Fees: <span v-if="event_has_tickets">${{min_price}} <span v-if="min_price != max_price">- ${{max_price}}</span></span>
+                  <span v-else>No Fees</span></p>
               </div>
-                  <div class="carousel-item">
-                    <img class="d-block w-100" src="https://via.placeholder.com/350x150" alt="Third slide">
+
+
+              <div class="info">
+                <span class="icon"><i class="fas fa-calendar-week"></i></span>
+                <p>{{StartDay}} <span v-if="!is_oneDay">- {{FinishDay}}</span></p>
               </div>
+
+
+              <div class="info">
+                <span class="icon"><i class="far fa-clock"></i></span>
+                <p>{{StartTime}} - {{FinishTime}}</p>
+              </div>
+
+            </div>
+
+
+            <h1>Tickets</h1>
+
+            <div class="tickets">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item ticket-stub" v-for="ticket in tickets" :key="ticket._id" @click="purchaseTicket(ticket)">
+                  <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ticket.title}}</h5>
+                    <p>
+                      <span class="badge badge-primary ">
+                        <font-awesome-icon :icon="moneyIcon"></font-awesome-icon>
+                        {{ticket.paid_or_free}}
+                      </span> &nbsp;
+                      <span class="badge badge-primary">
+                        <font-awesome-icon :icon="ticketIcon"></font-awesome-icon>
+                        {{ticket.quantity_available}}
+                      </span>
+                    </p>
                   </div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="card" style="min-height:100%">
-                  <div class="card-header tags-container">
-                    <a href="#" class="btn btn-primary">#Public</a>
-                  </div>
-                  <div class="card-body">
-                    <h3>{{flyer.title}}</h3>
-                    <div>
-                      <p>
-                        {{flyer.description}}
-                      </p>
-                    </div>
+                  <p>
+                    {{ticket.description}}
+                  </p>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-                    <h4>General Information</h4>
-                    <div class="mb-3">
-                      <table>
-                        <tr>
-                          <td>
-                            <font-awesome-icon :icon="mapIcon" /> LOCATION
-                          </td>
-                          <td>
-                            <a :href="locationData.url" target="_blank">
-                        {{locationData.formatted_address}}
-                      </a>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <font-awesome-icon :icon="ticketIcon" /> FEES
-                          </td>
-                          <td>
-                            <span v-if="event_has_tickets" >${{min_price}} <span v-if="min_price != max_price">- ${{max_price}}</span></span>
-<span v-else>No Fees</span>
-</td>
-</tr>
 
-<tr>
-  <td>
-    <font-awesome-icon :icon="calendarIcon" /> DATES
-  </td>
-  <td>
-    {{StartDay}} <span v-if="!is_oneDay">- {{FinishDay}}</span>
-  </td>
-</tr>
-<tr>
-  <td>
-    <font-awesome-icon :icon="clockIcon" /> TIMES
-  </td>
-  <td>
-    {{StartTime}} - {{FinishTime}}
-  </td>
-</tr>
-</table>
-</div>
-<h4>Tickets</h4>
-<div class="media">
-  <img class="mr-3" src="https://via.placeholder.com/100x100" alt="E-Mobie Ticket" />
-  <div class="media-body">
-    <h5>General</h5>
-  </div>
-</div>
-</div>
-<div class="card-footer actions-container">
-  <b-button variant="success" @click="openPurchaseDiag">Purchase Tickets</b-button>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
+  </section>
 
-<ticket-cart :eventObj="flyer" :toggle="openTicketCart"></ticket-cart>
+  <footer>
+    <div class="bottom-nav-container">
+      <ul class="bottom-nav">
+        <li><a href="#">Entertainment</a></li>
+        <li><a href="#">Outdoor Adventures</a></li>
+        <li><a href="#">Networking</a></li>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+    </div>
+    <div id="social_media">
+      <ul>
+        <li>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+        </li>
+        <li>
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+
+        </li>
+
+        <li>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+        </li>
+        <li>
+          <a href="#"><i class="fab fa-youtube"></i></a>
+        </li>
+      </ul>
+    </div>
+    <p> &copy;2019 | E-MOBiE. All Rights Reserved.</p>
+    <div id="signature">
+      <h4>Designed By:</h4>
+      <a href="khariwoods.com">
+        <img src="assets/css/images/khariwoods.png">
+      </a>
+    </div>
+  </footer>
+
+  <ticket-cart :ticketObj="selectedTicket" v-on:ticket-cart-closed="refreshTicketCart"></ticket-cart>
 </span>
 </template>
 
 <style lang="scss">
-@import "../assets/variables";
-.booklet-container {
-    background: linear-gradient(0deg, rgba(#3B44FF, 0.45), rgba(#3B44FF, 0.45)), url("/img/background.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-    padding-top: 5rem;
-    padding-bottom: 5rem;
-    margin-bottom: 2.5rem;
-    min-height: 40em;
+.ticket-stub:hover {
+    z-index: 2;
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
 }
 
-.background-img-container {
-    max-height: 25rem;
-    overflow: hidden;
-    z-index: -1;
-    position: absolute;
-}
-
-.flyer-image-container {
-    background-color: $lightgrey;
-    height: 800px;
-
-    img {
-        max-height: 800px;
-    }
-}
-
-.tags-container {
-    background-color: white;
-    border-bottom: none;
-    text-align: right;
-}
-
-.actions-container {
-    background-color: white;
-    border-top: none;
-    text-align: right;
-}
-
-.flyer-details-container {
-    margin-bottom: 50px;
-}
-
-.booklet-content {
-    position: absolute;
-    right: 0;
-    left: 0;
-    margin-bottom: 2em;
+.ticket-card {
+    padding: 0 !important;
+    width: 100% !important;
+    min-height: 0 !important;
+    margin: 1rem !important;
+    display: inline-block;
 }
 </style>
 
@@ -153,6 +162,8 @@ import {
 import {
   faMapMarkerAlt,
   faTicketAlt,
+  faQrcode,
+  faDollarSign,
   faCalendarAlt,
   faClock
 } from '@fortawesome/free-solid-svg-icons';
@@ -178,11 +189,12 @@ export default {
         height: '400px'
       },
       ticketCartObj: {},
-      openTicketCart: false,
+      selectedTicket: null,
       clockIcon: faClock,
       calendarIcon: faCalendarAlt,
-      ticketIcon: faTicketAlt,
-      mapIcon: faMapMarkerAlt
+      ticketIcon: faQrcode,
+      mapIcon: faMapMarkerAlt,
+      moneyIcon: faDollarSign
     }
   },
   created: function() {
@@ -257,13 +269,24 @@ export default {
     }
   },
   methods: {
-    openPurchaseDiag: function() {
-      if (this.$store.getters.userLoggedIn) {
-        if (this.openTicketCart == false) {
-          this.openTicketCart = true
-        } else {
-          this.openTicketCart = false
+    refreshTicketCart() {
+      this.selectedTicket = null
+    },
+
+    updateTickets: function(notificationData) {
+      let tempArray = this.Tickets
+      for (var i = 0; i < tempArray.length; i++) {
+        if (tempArray[i]._id == notificationData._id) {
+          tempArray.splice(i, 1, notificationData)
         }
+      }
+      this.Tickets = tempArray
+    },
+
+    purchaseTicket(ticket) {
+      if (this.$store.getters.userLoggedIn) {
+        this.selectedTicket = ticket
+
       } else {
         swal({
           title: 'Please Login',
@@ -277,16 +300,6 @@ export default {
           }
         })
       }
-    },
-
-    updateTickets: function(notificationData) {
-      let tempArray = this.Tickets
-      for (var i = 0; i < tempArray.length; i++) {
-        if (tempArray[i]._id == notificationData._id) {
-          tempArray.splice(i, 1, notificationData)
-        }
-      }
-      this.Tickets = tempArray
     }
   },
 

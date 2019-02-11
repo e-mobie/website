@@ -1,93 +1,7 @@
 <template>
 <span>
-  <show-case></show-case>
-  <!-- <search-box v-on:search-request="SetSearchQuery" :events="PublicFlyers" :search_summary="search_results" v-on:location-filter="UpdateLocationFilter"></search-box> -->
-  <section id="middle">
-
-
-    <div class="input_field">
-
-      <form>
-        <div class="location-section">
-          <!-- <i class="keyword-icon far fa-clock"></i> -->
-          <input class="search location" type="text" placeholder="  Search Location">
-        </div>
-
-
-        <div class="keyword-section">
-          <!-- <i class="keyword-icon far fa-clock"></i> -->
-          <input class="search keyword" type="text" placeholder="  Search Keyword">
-        </div>
-
-        <input class="submit" type="submit" value="Search">
-
-      </form>
-
-    </div>
-
-
-
-
-
-  </section>
-  <section id="tickets">
-
-    <div id="container-tickets">
-      <div class="ticket-grid">
-
-        <!-- <div class="row" v-for="flyer_group in GroupedFlyers"> -->
-        <!-- <div class="col-md-3" v-for="flyer in flyer_group" v-bind:key="flyer._id"> -->
-        <!-- <div class="event-card-container"> -->
-        <EventThumbnail v-for="flyer in PublicFlyers" v-bind:flyer="flyer" v-on:open-ticket-cart="SetTicketCartObject">
-        </EventThumbnail>
-        <!-- <EventThumbnail v-if="!hasQueryResults" v-bind:flyer="flyer" v-on:open-ticket-cart="SetTicketCartObject">
-              </EventThumbnail> -->
-        <!-- <EventThumbnail v-if="hasQueryResults" v-bind:flyer="flyer" v-on:open-ticket-cart="SetTicketCartObject">
-              </EventThumbnail> -->
-        <!-- </div> -->
-        <!-- </div> -->
-        <!-- </div> -->
-
-      </div>
-    </div>
-  </section>
-  <footer>
-    <div class="bottom-nav-container">
-      <ul class="bottom-nav">
-        <li><a href="#">Entertainment</a></li>
-        <li><a href="#">Outdoor Adventures</a></li>
-        <li><a href="#">Networking</a></li>
-        <li><a href="#">About Us</a></li>
-        <li><a href="#">Contact Us</a></li>
-      </ul>
-    </div>
-    <div id="social_media">
-      <ul>
-        <li>
-          <a href="#"><i class="fab fa-twitter"></i></a>
-        </li>
-        <li>
-          <a href="#"><i class="fab fa-facebook-f"></i></a>
-
-        </li>
-
-        <li>
-          <a href="#"><i class="fab fa-instagram"></i></a>
-        </li>
-        <li>
-          <a href="#"><i class="fab fa-youtube"></i></a>
-        </li>
-      </ul>
-    </div>
-    <p> &copy;2019 | E-MOBiE. All Rights Reserved.</p>
-    <div id="signature">
-      <h4>Designed By:</h4>
-      <a href="khariwoods.com">
-        <img src="assets/css/images/khariwoods.png">
-      </a>
-    </div>
-  </footer>
-  <!-- <b-container fluid>
+  <search-box v-on:search-request="SetSearchQuery" :events="PublicFlyers" :search_summary="search_results" v-on:location-filter="UpdateLocationFilter"></search-box>
+  <b-container fluid>
     <div class="row" v-for="flyer_group in GroupedFlyers">
       <div class="col-md-3" v-for="flyer in flyer_group" v-bind:key="flyer._id">
         <div class="event-card-container">
@@ -97,13 +11,19 @@
           </EventThumbnail>
         </div>
       </div>
+      <!-- <div class="event-card-container">
+      <EventThumbnail v-if="!hasQueryResults" v-for="flyer in PublicFlyers" v-bind:key="flyer._id" v-bind:flyer="flyer" v-on:open-ticket-cart="SetTicketCartObject">
+      </EventThumbnail>
+      <EventThumbnail v-if="hasQueryResults" v-for="flyer in queryResults" v-bind:key="flyer._id" v-bind:flyer="flyer" v-on:open-ticket-cart="SetTicketCartObject">
+      </EventThumbnail>
     </div> -->
+    </div>
 
 
-  <!-- <b-card-group class="event-card-container d-flex flex-sm-wrap">
+    <!-- <b-card-group class="event-card-container d-flex flex-sm-wrap">
 
   </b-card-group> -->
-  <!-- </b-container> -->
+  </b-container>
   <ticket-cart :eventObj="ticketCartEventObj" :toggle="openTicketModal" v-on:ticket-cart-closed="TicketModalClosed"></ticket-cart>
 </span>
 </template>
@@ -111,14 +31,12 @@
 
 
 <script>
-import ShowCase from './Utilities/Showcase.vue'
 import TicketCart from './Utilities/TicketCart.vue'
 import SearchBox from './Utilities/SearchBox.vue'
 import EventThumbnail from './Utilities/PublicEventThumbnail.vue'
 import fuse from 'fuse.js'
 export default {
   components: {
-    ShowCase,
     SearchBox,
     EventThumbnail,
     TicketCart

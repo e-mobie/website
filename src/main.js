@@ -4,7 +4,7 @@ import BootstrapVue from 'bootstrap-vue'
 Vue.use(BootstrapVue)
 import './assets/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-import './assets/global.scss'
+// import './assets/global.scss'
 
 import * as VueGoogleMaps from 'vue2-google-maps'
 Vue.use(VueGoogleMaps, {

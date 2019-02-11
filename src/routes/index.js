@@ -28,11 +28,25 @@ import ConfirmRsvp from '../components/Customer/Invites/ConfirmRsvp.vue'
 
 import PasswordReset from '../components/Utilities/PasswordReset.vue'
 
+import TestRoute from '../components/Utilities/Sandbox.vue'
+import TestRoute2 from '../components/Utilities/Sandbox2.vue'
+
+
 let routes = [
   {
     path: '/',
     name: 'HomePage',
     component: HomePage
+  },
+  {
+    path: '/sandbox',
+    name: 'Sandbox',
+    component: TestRoute
+  },
+  {
+    path: '/sandbox2',
+    name: 'Sandbox2',
+    component: TestRoute2
   },
   {
     path: '/login',

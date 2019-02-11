@@ -1,36 +1,16 @@
 <template>
-<b-modal ref="ticketCart" title="Purchase Tickets" v-model="showCart" @hidden="$emit('ticket-cart-closed')">
-  <b-container v-if="!ticketSelected">
-    <span v-if="this.tickets.length > 0">
-      <p>
-        Which ticket do you want?
-      </p>
-      <b-list-group>
-        <b-list-group-item v-for="ticket in this.tickets" :key="ticket._id" @click="setTicket(ticket)">
-          <h5>{{ticket.title}}</h5>
-          <p v-if="ticket.price != null">
-            Fees ${{ticket.price.toFixed(2)}}
-          </p>
-          <p>
-            {{ticket.description}}
-          </p>
-        </b-list-group-item>
-      </b-list-group>
-    </span>
-    <span v-else>
-      <p>
-        None available
-      </p>
-    </span>
-  </b-container>
-  <b-container style="max-height: 600px; overflow-y: scroll;" id="ticketRell" v-if="ticketSelected">
-    <h5 v-if="ticketCart.ticket != null">
-      <span v-if="ticketCart.ticket.price != null">
-        ${{ticketCart.ticket.price.toFixed(2)}} - {{ticketCart.ticket.title}}
+<b-modal ref="ticketCart" v-model="showCart" @hidden="$emit('ticket-cart-closed')">
+  <div slot="modal-header" class="d-flex w-100 justify-content-between" v-if="ticketObj != null">
+    <h4>Purchase: {{ticketObj.title}} </h4>
+    <h5>
+      <span v-if="ticketObj.price != null" class="badge badge-info">
+        {{ticketCart.guestList.length}} &times; ${{ticketObj.price.toFixed(2)}}
       </span>
     </h5>
+  </div>
+  <b-container style="max-height: 600px; overflow-y: scroll;" id="ticketRell">
     <b-form ref="ticketCartForm">
-      <b-list-group style="min-height: 450px;" ref="ticketRell">
+      <b-list-group style="min-height: 450px;" ref="ticketRell" class="list-group-flush">
         <b-list-group-item v-for="(slot, slot_key) in ticketCart.guestList" :key="slot_key">
           <div class="d-flex w-100 justify-content-between">
             <h5>Ticket # {{slot_key + 1}}</h5>
@@ -75,27 +55,37 @@
       </b-list-group>
     </b-form>
   </b-container>
-  <div slot="modal-footer" class="w-100">
-    <b-button-group class="float-left" v-if="ticketSelected">
+  <div slot="modal-footer" class="d-flex w-100 justify-content-between">
+    <b-button-group>
       <b-button variant="outline-info" @click="addRsvpSlot" :disabled="loading">Add RSVP Pass</b-button>
       <b-button variant="outline-info" @click="addGuestSlot" :disabled="loading">Add Guest Pass</b-button>
     </b-button-group>
 
-    <b-button-group class="float-right" v-if="ticketSelected">
+    <b-button-group>
       <b-button variant="secondary" @click="closeTicketCart" :disabled="loading">Cancel</b-button>
       <b-button variant="success" @click="onTicketCartSubmit" :disabled="loading">Purchase</b-button>
     </b-button-group>
-    <b-button variant="secondary" @click="closeTicketCart" :disabled="loading" v-if="!ticketSelected">Cancel</b-button>
   </div>
 </b-modal>
 </template>
+
+<style>
+.modal-header {
+  color: black;
+}
+
+.modal-footer {
+  min-height: 0;
+  background-color: white;
+}
+</style>
 
 <script>
 import axios from 'axios'
 import swal from 'sweetalert2'
 import $ from 'jquery'
 export default {
-  props: ['eventObj', 'toggle'],
+  props: ['ticketObj', 'toggle'],
   data: function() {
     return {
       loading: false,
@@ -118,7 +108,7 @@ export default {
   computed: {
     showCart: {
       get: function() {
-        if (this.toggle) {
+        if (this.ticketObj != null) {
           // this.$refs.ticketCart.show()
           return true
         } else {
@@ -130,29 +120,9 @@ export default {
         return newValue
       }
 
-    },
-    tickets() {
-      if (this.eventObj.tickets != null) {
-        return this.eventObj.tickets
-      } else {
-        return []
-      }
     }
-
   },
   methods: {
-    setTicket(ticket) {
-      if (ticket.quantity_available > 0) {
-        this.ticketCart.ticket = ticket
-        this.ticketSelected = true
-      } else {
-        swal({
-          title: "Sold Out",
-          text: "These tickets are sold out",
-          type: "warning"
-        })
-      }
-    },
     closeTicketCart() {
       this.ticketSelected = false
       this.$refs.ticketCart.hide()
@@ -184,8 +154,10 @@ export default {
         scrollTop: height
       }, 500);
     },
+
     onTicketCartSubmit: function() {
-      this.ticketCart.eventId = this.eventObj._id
+      this.ticketCart.eventId = this.ticketObj.eventId
+      this.ticketCart.ticket = this.ticketObj
       this.ticketCart.purchaser = this.$store.state.user.user.email
       if (!this.$refs.ticketCartForm.checkValidity()) {
         this.$refs.ticketCartForm.reportValidity()
@@ -200,7 +172,7 @@ export default {
           this.$store.dispatch('user/AddInvoice', response.data.data)
           swal({
             title: 'Purchase Complete',
-            text: 'Your tickets are in your hub',
+            text: 'Your tickets are in your hub and we sent them to the email(s) provided',
             type: 'success'
           }).then((response) => {
             if (response.value) {

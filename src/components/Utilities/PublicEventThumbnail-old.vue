@@ -1,53 +1,70 @@
 <template>
-<div class="card">
-  <button class="price">FREE</button>
-  <div class="img-container">
-    <img :src="flyerImageSrc" />
+<div class="card event-card">
+  <router-link :to="{name: 'EventView', params: { email: this.flyer.publisher, eventkey: this.flyer._id}}">
+    <div class="event-card-img-container">
+      <b-img :src="thumbnail" v-if="has_thumbnail"></b-img>
+      <b-img v-else class="card-img-top" :src="flyerImageSrc" :class="flyer-thumbnail" />
+      <b-button variant="default" size="sm">FREE</b-button>
+    </div>
+  </router-link>
+  <div class="card-body event-card-info-container">
+    <h5 class="event-card-title">{{flyer.title}}</h5>
+    <p class="event-card-description">
+      {{ flyer.description}}
+    </p>
+    <div class="general-info">
+      <h6 class="general-info-title">General Information</h6>
+      <b-row class="general-info-details">
+        <b-col>
+          <p>
+            <span class="label-location">
+              <font-awesome-icon :icon="mapIcon" /> LOCATION
+            </span> {{Loc.formatted_address}}
+          </p>
+          <p>
+            <span class="label-Fees">
+              <font-awesome-icon :icon="ticketIcon" /> FEES
+            </span> {{Fees}}
+          </p>
+          <p>
+            <span class="label-Dates">
+            <font-awesome-icon :icon="calendarIcon" />  DATES
+          </span> {{StartDate}}
+          </p>
+          <p>
+            <span class="label-Time">
+              <font-awesome-icon :icon="clockIcon" /> TIME
+            </span> {{StartTime}}
+          </p>
+        </b-col>
+      </b-row>
+    </div>
+    <b-button variant="success" size="sm" @click="openTicketCart">TICKETS</b-button>
+    <b-button variant="outline-secondary" size="sm" :to="{name: 'EventView', params: { email: this.flyer.publisher, eventkey: this.flyer._id}}">VIEW DETAILS</b-button>
   </div>
-
-  <h1>{{flyer.title}}</h1>
-
-  <p>{{ flyer.description}}</p>
-
-  <h3>General Information</h3>
-
-  <div class="general-info">
-
-    <div class="info">
-      <span class="icon"><i class="fas fa-map-marker-alt"></i></span>
-      <p>Location: {{Loc.formatted_address}}</p>
-    </div>
-
-
-    <div class="info">
-      <span class="icon"><i class="fas fa-dollar-sign"></i></span>
-      <p>Fees: {{Fees}}</p>
-    </div>
-
-
-    <div class="info">
-      <span class="icon"><i class="fas fa-calendar-week"></i></span>
-      <p>Dates: {{StartDate}}</p>
-    </div>
-
-
-    <div class="info">
-      <span class="icon"><i class="far fa-clock"></i></span>
-      <p>Time: {{StartTime}}</p>
-    </div>
-
-
-    <!-- <button @click="openTicketCart">Tickets</button> -->
-    <button>
-      <router-link :to="{name: 'EventView', params: { email: this.flyer.publisher, eventkey: this.flyer._id}}">View Details</router-link>
-    </button>
-  </div>
-
 </div>
 </template>
 
 <style type="scss">
+.event-card {
+  box-shadow: 1px 1px 3px #E0E0E0;
+}
 
+.card-mod {
+  color: black;
+  font-weight: normal;
+  font-size: 100%;
+  text-align: left;
+}
+
+a.card-mod:hover {
+  color: #28a745;
+  border-color: #28a745;
+}
+
+.flyer-thumbnail {
+  object-fit: cover;
+}
 </style>
 
 <script>
