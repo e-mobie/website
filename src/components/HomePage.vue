@@ -82,8 +82,8 @@
     <p> &copy;2019 | E-MOBiE. All Rights Reserved.</p>
     <div id="signature">
       <h4>Designed By:</h4>
-      <a href="khariwoods.com">
-        <img src="assets/css/images/khariwoods.png">
+      <a href="http://www.khariwoods.com/">
+        <img src="@/assets/css/images/khariwoods.png">
       </a>
     </div>
   </footer>
@@ -108,7 +108,9 @@
 </span>
 </template>
 
+<style>
 
+</style>
 
 <script>
 import ShowCase from './Utilities/Showcase.vue'

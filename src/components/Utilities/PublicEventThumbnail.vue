@@ -1,5 +1,5 @@
 <template>
-<div class="card">
+<div id="woodCard" class="card">
   <button class="price">FREE</button>
   <div class="img-container">
     <img :src="flyerImageSrc" />

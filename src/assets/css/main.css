@@ -15,6 +15,10 @@ header{
 	border-bottom: 2px solid #000bfa;
 }
 
+.white-body{
+	background-color: white;
+}
+
 .container{
 	width: 95%;
 	padding:0px;
@@ -127,6 +131,10 @@ div.mobile-header{
 	color:#4D4D4D;
 	border:2px solid #6610f2;
 	background-color: white;
+}
+
+.dsk-top-nav .home-btn:hover {
+	color: #6610f2;
 }
 
 .dropdown-content{
@@ -319,7 +327,21 @@ div.mobile-header{
 	margin:0 auto;
 }
 
-.card{
+/* .card{
+	position: relative;
+	height:auto;
+	min-height: 450px;
+	margin:20px auto;
+	padding: 20px;
+	color:#4D4D4D;
+	background-color:#fff;
+	width:80%;
+	max-width: 300px;
+	border-radius: 8px;
+	font-family: "Nunito", sans-serif;
+} */
+
+#woodCard{
 	position: relative;
 	height:auto;
 	min-height: 450px;
@@ -333,7 +355,7 @@ div.mobile-header{
 	font-family: "Nunito", sans-serif;
 }
 
-.card button a{
+#woodCard button a{
 	color:#eee;
 	text-decoration: none;
 }
@@ -344,7 +366,7 @@ div.mobile-header{
 	max-height: 400px;
 }
 
-.card h1{
+#woodCard h1{
 	font-size: 24px;
 }
 .price{

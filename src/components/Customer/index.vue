@@ -2,10 +2,10 @@
 <div class="container" id="content">
   <div class="row">
     <div class="col-lg-12">
-      <div class="card">
-        <div class="card-header">
+      <div class="card" style="border-color: #6610f2;">
+        <div class="card-header" style="background-color: #6610f2; color: white;">
           <div class="media">
-            <img class="mr-3 rounded-circle" :src="profile_picture" style="max-width:95px;" alt="Generic placeholder image">
+            <img class="mr-3 " :src="profile_picture" style="max-width:95px;" alt="Generic placeholder image">
             <div class="media-body">
               <h5 class="mt-0">{{ this.$store.state.user.user.username }}</h5>
               <p v-if="this.$store.state.user.user.status == null">
@@ -15,7 +15,7 @@
                 {{ this.$store.state.user.user.status}}
               </p>
               <p>
-                <router-link :to="{ name: 'CustomerPreferences', params: {} }" class="btn btn-default">
+                <router-link :to="{ name: 'CustomerPreferences', params: {} }" class="btn btn-outline-primary" id="settings-button" role="button">
                   Settings
                 </router-link>
               </p>
@@ -45,6 +45,12 @@
 
 <script>
 export default {
+  mounted() {
+    this.addWhiteBody()
+  },
+  destroyed() {
+    this.removeWhiteBody()
+  },
   sockets: {
     customerNotifications(data) {
       if (data.to === this.$store.state.user.user.email) {
@@ -75,6 +81,16 @@ export default {
         return "http://via.placeholder.com/100x100"
       }
     }
+  },
+  methods: {
+    addWhiteBody() {
+      const el = document.body;
+      el.classList.add('white-body')
+    },
+    removeWhiteBody() {
+      const el = document.body;
+      el.classList.remove('white-body')
+    }
   }
 }
 </script>
@@ -83,5 +99,26 @@ export default {
 #content {
   margin-top: 50px;
   margin-bottom: 20px;
+}
+
+#settings-button {
+  color: white;
+  border-color: white;
+  background-color: transparent;
+  background-image: none;
+}
+
+#settings-button:hover {
+  color: #6610f2;
+  border-color: #6610f2;
+  background-color: white;
+  background-image: none;
+}
+
+#settings-button:active {
+  color: #6610f2;
+  border-color: #6610f2;
+  background-color: white;
+  background-image: none;
 }
 </style>

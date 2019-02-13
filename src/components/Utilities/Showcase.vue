@@ -13,7 +13,7 @@
 <style>
 #showcase {
   background-image: none;
-  background-color: none;
+  min-height: 50px;
 }
 </style>
 
