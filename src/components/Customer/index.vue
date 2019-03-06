@@ -2,8 +2,8 @@
 <div class="container" id="content">
   <div class="row">
     <div class="col-lg-12">
-      <div class="card" style="border-color: #6610f2;">
-        <div class="card-header" style="background-color: #6610f2; color: white;">
+      <div class="card" style="border-color: #0f35f2;">
+        <div class="card-header" style="background-color: #1036f2; color: white;">
           <div class="media">
             <img class="mr-3 " :src="profile_picture" style="max-width:95px;" alt="Generic placeholder image">
             <div class="media-body">

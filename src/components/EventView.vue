@@ -16,13 +16,13 @@
               <img :src="flyerImg" class="img-thumbnail">
             </div>
           </div>
-          <div class=" m-3" style="max-width: 450px; text-align: center;">
+          <!-- <div class=" m-3" style="max-width: 450px; text-align: center;">
             <img src="https://via.placeholder.com/100" alt="..." class="img-thumbnail m-1">
             <img src="https://via.placeholder.com/100" alt="..." class="img-thumbnail m-1">
             <img src="https://via.placeholder.com/100" alt="..." class="img-thumbnail m-1">
             <img src="https://via.placeholder.com/100" alt="..." class="img-thumbnail m-1">
             <img src="https://via.placeholder.com/100" alt="..." class="img-thumbnail m-1">
-          </div>
+          </div> -->
 
         </div>
         <div class="col-md-6">

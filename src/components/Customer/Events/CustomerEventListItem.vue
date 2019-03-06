@@ -6,11 +6,11 @@
       </font-awesome-icon> Edit
     </b-button>
 
-    <b-button variant="outline-info" size="sm" :to="{ name: 'QrReader', params: {eventId: customerEvent._id} }">
+    <!-- <b-button variant="outline-info" size="sm" :to="{ name: 'QrReader', params: {eventId: customerEvent._id} }">
       <font-awesome-icon :icon="qrIcon">
       </font-awesome-icon>
       Ticket Scanner
-    </b-button>
+    </b-button> -->
 
     <b-button variant="outline-info" size="sm" :to="{ name: 'EventStats', params: {eventkey: customerEvent._id, email: user.email}}">
       <font-awesome-icon :icon="chartIcon">

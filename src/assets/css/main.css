@@ -2,7 +2,7 @@
 body{
 	margin:0 auto;
 	font-family: "Nunito", sans-serif;
-	background-color:rgba(107,17,255,0.6);
+	background-color:rgba(17,57,255,0.6);
 }
 
 header{
@@ -12,7 +12,7 @@ header{
 	width: 100%;
 	color:#fff;
 	z-index: 5;
-	border-bottom: 2px solid #000bfa;
+	border-bottom: 2px solid #1139ff;
 }
 
 .white-body{
@@ -134,11 +134,11 @@ div.mobile-header{
 }
 
 .dsk-top-nav .home-btn:hover {
-	color: #6610f2;
+	color: #1036f2;
 }
 
 .dropdown-content{
-	display: none;
+	/* display: none; */
 	width: 100%;
 	font-family: 'Arial', 'sans-serif';
 
@@ -201,7 +201,7 @@ div.mobile-header{
 	z-index: 3;
 	height: 100%;
 	width: 100%;
-	background:linear-gradient(90deg,rgba(255,105,180,.4),rgba(255,211,0,.3));
+	background:linear-gradient(90deg,rgba(105,116,255,.4),rgba(255,211,0,.3));
 }
 
 
@@ -432,7 +432,7 @@ footer{
 	height:auto;
 	min-height: 550px;
 	color:#eee;
-	background-color: #6610f2;
+	background-color: #0e0ba7;
 
 }
 
@@ -470,7 +470,7 @@ footer{
 	height:auto;
 	padding: 20px 10px;
 	margin:0;
-	background-color: #370982;
+	background-color: #090d82;
 }
 
 

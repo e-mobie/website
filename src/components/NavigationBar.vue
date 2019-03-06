@@ -32,7 +32,7 @@
 
   <header>
     <div class="mobile-header">
-      <div class="dropdown-btn"><i class="fas fa-bars"></i></div>
+      <div class="dropdown-btn" @click="open = !open"><i class="fas fa-bars"></i></div>
       <div id="logo"><span class="logo-img">
           <router-link :to="{ name: 'HomePage', params: {} }">E-MOBiE</router-link>
         </span></div>
@@ -65,31 +65,34 @@
     </div>
 
   </header>
-  <div class="dropdown-content">
-    <ul>
-      <li><a href="#">Entertainment</a></li>
-      <li><a href="#">Outdoor Adventures</a></li>
-      <li><a href="#">Water Sports</a></li>
-      <li><a href="#">About Us</a></li>
-      <li><a href="#">Contact Us</a></li>
-      <li v-if="!LoggedIn">
-        <a class="special-btn" href="#"> Sign In</a>
-      </li>
-      <span v-else>
-        <li>
-          <router-link :to="{ name: '', params: {} }">
-            <font-awesome-icon :icon="homeIcon"></font-awesome-icon>
-          </router-link>
+  <VueSlideToggle :open="open">
+    <div class="dropdown-content">
+      <ul>
+        <li><a href="#">Entertainment</a></li>
+        <li><a href="#">Outdoor Adventures</a></li>
+        <li><a href="#">Water Sports</a></li>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Contact Us</a></li>
+        <li v-if="!LoggedIn">
+          <router-link :to="{ name: 'CustomerLogin', params: {} }" class="special-btn-dsktop">Sign In</router-link>
         </li>
-        <li>
-          <router-link :to="{ name: '', params: {} }">
-            <font-awesome-icon :icon="SignOff"></font-awesome-icon>
-          </router-link>
-        </li>
-      </span>
+        <span v-else>
+          <li>
+            <router-link :to="{ name: 'CustomerTickets', params: { email: customer.email } }" class="home-btn">
+              <font-awesome-icon :icon="homeIcon"></font-awesome-icon>
+            </router-link>
+          </li>
+          <li>
+            <a href="#" @click="CustomerLogout">
+              <font-awesome-icon :icon="SignOff"></font-awesome-icon>
+            </a>
+          </li>
+        </span>
 
-    </ul>
-  </div>
+      </ul>
+    </div>
+  </VueSlideToggle>
+
 </span>
 </template>
 
@@ -101,14 +104,19 @@ import {
   faHome,
   faSignOutAlt
 } from '@fortawesome/free-solid-svg-icons';
+import {
+  VueSlideToggle
+} from 'vue-slide-toggle';
 export default {
   components: {
-    FontAwesomeIcon
+    FontAwesomeIcon,
+    VueSlideToggle
   },
   data: function() {
     return {
       homeIcon: faHome,
-      SignOff: faSignOutAlt
+      SignOff: faSignOutAlt,
+      open: false
     }
   },
   computed: {
