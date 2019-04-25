@@ -36,7 +36,7 @@
       <p>Time: {{StartTime}}</p>
     </div>
 
-    <p>{{ flyer.description}}</p>
+    <p class="text-truncate">{{ flyer.description}}</p>
 
     <!-- <button @click="openTicketCart">Tickets</button> -->
     <button>
