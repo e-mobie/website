@@ -1,5 +1,24 @@
 <template>
-<b-container fluid class="search-container">
+<div class="input_field">
+
+  <form>
+    <div class="location-section">
+      <!-- <i class="keyword-icon far fa-clock"></i> -->
+      <input class="search location" type="text" placeholder="  Search Location">
+    </div>
+
+
+    <div class="keyword-section">
+      <!-- <i class="keyword-icon far fa-clock"></i> -->
+      <input class="search keyword" type="text" placeholder="  Search Keyword">
+    </div>
+
+    <input class="submit" type="submit" value="Search">
+
+  </form>
+
+</div>
+<!-- <b-container fluid class="search-container">
   <b-row>
     <b-col md="12">
       <div class="search-title">
@@ -37,7 +56,7 @@
   </div>
 
 
-</b-container>
+</b-container> -->
 </template>
 <style lang="scss">
 @import '../../assets/_variables.scss';

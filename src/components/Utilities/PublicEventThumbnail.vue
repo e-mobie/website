@@ -1,17 +1,17 @@
 <template>
 <div id="woodCard" class="card">
   <button class="price">FREE</button>
-  <div class="img-container">
-    <img :src="flyerImageSrc" />
+  <div class="mb-4">
+    <div class="bgimg-container" :style="{'background-image': 'url(\'' + flyerImageSrc + '\')'}">
+    </div>
+    <div class="img-container">
+      <img :src="flyerImageSrc" />
+    </div>
   </div>
 
-  <h1>{{flyer.title}}</h1>
-
-  <p>{{ flyer.description}}</p>
-
-  <h3>General Information</h3>
-
   <div class="general-info">
+
+    <h1>{{flyer.title}}</h1>
 
     <div class="info">
       <span class="icon"><i class="fas fa-map-marker-alt"></i></span>
@@ -36,10 +36,14 @@
       <p>Time: {{StartTime}}</p>
     </div>
 
+    <p>{{ flyer.description}}</p>
 
     <!-- <button @click="openTicketCart">Tickets</button> -->
     <button>
-      <router-link :to="{name: 'EventView', params: { email: this.flyer.publisher, eventkey: this.flyer._id}}">View Details</router-link>
+      <router-link :to="{name: 'EventView', params: { email: this.flyer.publisher, eventkey: this.flyer._id}}">
+        <font-awesome-icon :icon="ticketIcon"></font-awesome-icon>
+        View Details
+      </router-link>
     </button>
   </div>
 
@@ -47,7 +51,9 @@
 </template>
 
 <style type="scss">
-
+.img-container {
+  height: 400px;
+}
 </style>
 
 <script>

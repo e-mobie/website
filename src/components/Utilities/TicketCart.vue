@@ -34,13 +34,6 @@
               <b-form-input type="tel" :id="slot_key + 'phone'" v-model="slot.phone" :disabled="loading"></b-form-input>
             </b-form-group>
 
-            <!-- <b-form-group label="Gender" required>
-                  <b-form-radio-group :id="slot_key + 'gender'" v-model="slot.gender" :disabled="loading || slot.signed_in">
-                    <b-form-radio value="F">Female</b-form-radio>
-                    <b-form-radio value="M">Male</b-form-radio>
-                    <b-form-radio value="NS">Rather Not Say</b-form-radio>
-                  </b-form-radio-group>
-                </b-form-group> -->
           </span>
 
           <span v-else>
@@ -58,7 +51,6 @@
   <div slot="modal-footer" class="d-flex w-100 justify-content-between">
     <b-button-group>
       <b-button variant="outline-info" @click="addRsvpSlot" :disabled="loading">Add RSVP Pass</b-button>
-      <b-button variant="outline-info" @click="addGuestSlot" :disabled="loading">Add Guest Pass</b-button>
     </b-button-group>
 
     <b-button-group>

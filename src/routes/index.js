@@ -25,6 +25,7 @@ import CustomerPreferences from '../components/Customer/Preferences/preferences.
 import PurchasesIndex from '../components/Customer/Purchases/index.vue'
 import EventStats from '../components/Customer/Events/EventStats.vue'
 import ConfirmRsvp from '../components/Customer/Invites/ConfirmRsvp.vue'
+import About from '../components/About.vue'
 
 import PasswordReset from '../components/Utilities/PasswordReset.vue'
 
@@ -39,19 +40,14 @@ let routes = [
     component: HomePage
   },
   {
-    path: '/sandbox',
-    name: 'Sandbox',
-    component: TestRoute
-  },
-  {
-    path: '/sandbox2',
-    name: 'Sandbox2',
-    component: TestRoute2
-  },
-  {
     path: '/login',
     name: 'CustomerLogin',
     component: CustomerLogin
+  },
+  {
+    path: '/about',
+    name: 'AboutPage',
+    component: About
   },
   {
     path: '/Register',

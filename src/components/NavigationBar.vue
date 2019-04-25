@@ -39,9 +39,9 @@
       <div class="dsk-top-nav">
         <ul>
           <li><a href="#">Entertainment</a></li>
-          <li><a href="#">Outdoor Adventures</a></li>
-          <li><a href="#">Water Sports</a></li>
-          <li><a href="#">About Us</a></li>
+          <li>
+            <router-link :to="{ name: 'AboutPage', params: {} }">About Us</router-link>
+          </li>
           <li><a href="#">Contact Us</a></li>
           <li v-if="!LoggedIn">
             <router-link :to="{ name: 'CustomerLogin', params: {} }" class="special-btn-dsktop">Sign In</router-link>
@@ -69,9 +69,9 @@
     <div class="dropdown-content">
       <ul>
         <li><a href="#">Entertainment</a></li>
-        <li><a href="#">Outdoor Adventures</a></li>
-        <li><a href="#">Water Sports</a></li>
-        <li><a href="#">About Us</a></li>
+        <li>
+          <router-link :to="{ name: 'About', params: {} }">About Us</router-link>
+        </li>
         <li><a href="#">Contact Us</a></li>
         <li v-if="!LoggedIn">
           <router-link :to="{ name: 'CustomerLogin', params: {} }" class="special-btn-dsktop">Sign In</router-link>

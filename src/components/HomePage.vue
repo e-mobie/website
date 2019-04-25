@@ -1,53 +1,16 @@
 <template>
 <span>
   <show-case></show-case>
-  <!-- <search-box v-on:search-request="SetSearchQuery" :events="PublicFlyers" :search_summary="search_results" v-on:location-filter="UpdateLocationFilter"></search-box> -->
+
   <section id="middle">
-
-
-    <div class="input_field">
-
-      <form>
-        <div class="location-section">
-          <!-- <i class="keyword-icon far fa-clock"></i> -->
-          <input class="search location" type="text" placeholder="  Search Location">
-        </div>
-
-
-        <div class="keyword-section">
-          <!-- <i class="keyword-icon far fa-clock"></i> -->
-          <input class="search keyword" type="text" placeholder="  Search Keyword">
-        </div>
-
-        <input class="submit" type="submit" value="Search">
-
-      </form>
-
-    </div>
-
-
-
-
-
+    <SearchBox></SearchBox>
   </section>
-  <section id="tickets">
 
+  <section id="tickets">
     <div id="container-tickets">
       <div class="ticket-grid">
-
-        <!-- <div class="row" v-for="flyer_group in GroupedFlyers"> -->
-        <!-- <div class="col-md-3" v-for="flyer in flyer_group" v-bind:key="flyer._id"> -->
-        <!-- <div class="event-card-container"> -->
         <EventThumbnail v-for="flyer in PublicFlyers" v-bind:flyer="flyer" v-on:open-ticket-cart="SetTicketCartObject">
         </EventThumbnail>
-        <!-- <EventThumbnail v-if="!hasQueryResults" v-bind:flyer="flyer" v-on:open-ticket-cart="SetTicketCartObject">
-              </EventThumbnail> -->
-        <!-- <EventThumbnail v-if="hasQueryResults" v-bind:flyer="flyer" v-on:open-ticket-cart="SetTicketCartObject">
-              </EventThumbnail> -->
-        <!-- </div> -->
-        <!-- </div> -->
-        <!-- </div> -->
-
       </div>
     </div>
   </section>
@@ -87,23 +50,6 @@
       </a>
     </div>
   </footer>
-  <!-- <b-container fluid>
-    <div class="row" v-for="flyer_group in GroupedFlyers">
-      <div class="col-md-3" v-for="flyer in flyer_group" v-bind:key="flyer._id">
-        <div class="event-card-container">
-          <EventThumbnail v-if="!hasQueryResults" v-bind:flyer="flyer" v-on:open-ticket-cart="SetTicketCartObject">
-          </EventThumbnail>
-          <EventThumbnail v-if="hasQueryResults" v-bind:flyer="flyer" v-on:open-ticket-cart="SetTicketCartObject">
-          </EventThumbnail>
-        </div>
-      </div>
-    </div> -->
-
-
-  <!-- <b-card-group class="event-card-container d-flex flex-sm-wrap">
-
-  </b-card-group> -->
-  <!-- </b-container> -->
   <ticket-cart :eventObj="ticketCartEventObj" :toggle="openTicketModal" v-on:ticket-cart-closed="TicketModalClosed"></ticket-cart>
 </span>
 </template>

@@ -15,28 +15,62 @@
             <b-button type="submit" variant="info" :disabled="loading">Sign In</b-button>
             <b-button variant="secondary" :disabled="loading" :to="{name: 'CustomerRegister'}">Sign Up</b-button>
           </b-button-group>
+          <b-button-group class="d-flex justify-content-center m-2">
+            <button class="btn btn-outline-primary btn-sm" @click.prevent="facebookLogin">
+              <FontAwesomeIcon :icon="facebookIcon" size="2x"></FontAwesomeIcon>
+              Login with facebook
+            </button>
+          </b-button-group>
           <router-link :to="{ name: 'PasswordReset', params: {} }">Forgot Password</router-link>
         </b-form>
       </b-card>
     </b-col>
   </b-row>
+  <div class="background-image">
+    <img src="@/assets/css/images/emobielogocomplete.png" />
+  </div>
 </b-container>
 </template>
 
-<style>
+<style type="scss">
+body {
+  background-color: white;
+}
 
+.background-image img {
+  height: 50%;
+  width: 50%;
+  position: relative;
+  left: 52%;
+}
+
+.background-image {
+  z-index: -1;
+  display: flex;
+  bottom: -15%;
+  position: absolute;
+}
 </style>
 
 <script>
+import fblogin from '../mixins/Facebook/mix.js'
 import swal from 'sweetalert2'
 import facebookLogin from 'facebook-login-vuejs';
+import {
+  FontAwesomeIcon
+} from '@fortawesome/vue-fontawesome';
+import {
+  faFacebook
+} from '@fortawesome/free-brands-svg-icons';
 
 export default {
+  mixins: [fblogin],
   components: {
-    facebookLogin
+    FontAwesomeIcon
   },
   data: function() {
     return {
+      facebookIcon: faFacebook,
       loading: false,
       user: {
         email: "",
