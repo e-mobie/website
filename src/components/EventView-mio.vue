@@ -4,39 +4,24 @@
 
     <div class="overlay"></div>
 
+
     <div class="details-card-container detail-grid">
       <div class="row">
-        <div class="col-md-6">
-          <div class="row">
-            <div class="col">
-              <div class="p-2">
-                <img :src="flyerImg" class="img-fluid">
-              </div>
+        <div class="col">
+          <!-- Image Showcase -->
+          <div class="p-2" style="text-align: center;">
+            <!-- Position div  -->
+            <div class="details-img-container detail-grid-box1" style="display: inline-block;">
+              <!-- Size div -->
+              <img :src="flyerImg" class="img-thumbnail">
             </div>
           </div>
-          <!-- Image Showcase -->
-          <!-- <div class="p-2" style="text-align: center;"> -->
-          <!-- Position div  -->
-          <!-- <div class="details-img-container detail-grid-box1" style="display: inline-block;"> -->
-          <!-- Size div -->
-          <!-- </div> -->
-          <!-- </div> -->
-          <!-- <div class="row">
-            <div class="col">
-              <img :src="flyerImg" alt="..." class="img-fluid">
-            </div>
-            <div class="col">
-              <img src="https://via.placeholder.com/75" alt="..." class="img-fluid">
-            </div>
-            <div class="col">
-              <img src="https://via.placeholder.com/75" alt="..." class="img-fluid">
-            </div>
-            <div class="col">
-              <img src="https://via.placeholder.com/75" alt="..." class="img-fluid">
-            </div>
-            <div class="col">
-              <img src="https://via.placeholder.com/75" alt="..." class="img-fluid">
-            </div>
+          <!-- <div class=" m-3" style="max-width: 450px; text-align: center;">
+            <img src="https://via.placeholder.com/100" alt="..." class="img-thumbnail m-1">
+            <img src="https://via.placeholder.com/100" alt="..." class="img-thumbnail m-1">
+            <img src="https://via.placeholder.com/100" alt="..." class="img-thumbnail m-1">
+            <img src="https://via.placeholder.com/100" alt="..." class="img-thumbnail m-1">
+            <img src="https://via.placeholder.com/100" alt="..." class="img-thumbnail m-1">
           </div> -->
 
         </div>
@@ -191,7 +176,6 @@ import axios from 'axios'
 import TicketCart from './Utilities/TicketCart.vue'
 import $ from 'jquery'
 export default {
-  name: "eventShowcase",
   components: {
     Loader,
     googleMap,
@@ -206,7 +190,6 @@ export default {
       },
       ticketCartObj: {},
       selectedTicket: null,
-      selectedImage: null,
       clockIcon: faClock,
       calendarIcon: faCalendarAlt,
       ticketIcon: faQrcode,

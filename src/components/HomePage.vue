@@ -26,20 +26,20 @@
     </div>
     <div id="social_media">
       <ul>
-        <li>
+        <!-- <li>
           <a href="#"><i class="fab fa-twitter"></i></a>
-        </li>
+        </li> -->
         <li>
-          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://www.facebook.com/Emobie242/"><i class="fab fa-facebook-f"></i></a>
 
         </li>
 
         <li>
-          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.instagram.com/emobie_242/"><i class="fab fa-instagram"></i></a>
         </li>
-        <li>
+        <!-- <li>
           <a href="#"><i class="fab fa-youtube"></i></a>
-        </li>
+        </li> -->
       </ul>
     </div>
     <p> &copy;2019 | E-MOBiE. All Rights Reserved.</p>

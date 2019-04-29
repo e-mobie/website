@@ -1195,11 +1195,11 @@ display: inline;
 		border-left:2px solid #eee;
 	}
 
-	.details-img-container img{
+	/* .details-img-container img{
 		margin:15px 100px;
-		/*text-align: center;*/
+		text-align: center;
 		border-bottom:none;
-	}
+	} */
 
 
 	/*Internet explorer support*/
@@ -1226,10 +1226,10 @@ display: inline;
 		border-left:2px solid #eee;
 	}
 
-	.details-img-container img{
+	/* .details-img-container img{
 		margin:15px 100px;
 		border-bottom:none;
-	}
+	} */
 
 	/*End of IE Support*/
 }

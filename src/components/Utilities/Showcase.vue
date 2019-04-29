@@ -1,5 +1,5 @@
 <template>
-<section id="showcase" class="showcase grid">
+<section id="main-showcase" class="showcase grid">
   <div class="carousel-container">
     <carousel :autoplay="true" :dots="false" :loop="true" :nav="false" :responsive="{0:{items: 1}, 768: {items: 2}, 1020:{items: 4}}">
       <img src="https://images.pexels.com/photos/1587927/pexels-photo-1587927.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" />
@@ -13,7 +13,7 @@
 </template>
 
 <style>
-#showcase {
+#main-showcase {
   background-image: none;
   min-height: 50px;
 }
